@@ -7,6 +7,7 @@ import inet.physicallayer.wired.common.WireJunction;
 import ned.DatarateChannel;
 import inet.node.tsn.TsnSwitch;
 import inet.node.tsn.TsnDevice;
+import inet.node.tsn.TsnClock;
 
 
 network TwoHosts2
@@ -28,8 +29,12 @@ network TwoHosts2
             parameters:
                 @display("p=191,169");
         }
+        gPTPclock: TsnClock {
+            @display("p=191,37");
+        }
     connections:
         hostA.ethg++ <--> Eth100M <--> tsnSwitch.ethg++;
         hostB.ethg++ <--> Eth100M <--> tsnSwitch.ethg++;
         hostC.ethg++ <--> Eth100M <--> tsnSwitch.ethg++;
+        gPTPclock.ethg++ <--> Eth100M <--> tsnSwitch.ethg++;
 }
