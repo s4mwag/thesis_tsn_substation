@@ -1,32 +1,35 @@
 package inet.examples.hitachi_test;
 
-import inet.node.ethernet.EthernetHub;
+import inet.networks.base.TsnNetworkBase;
+import inet.node.contract.IEthernetNetworkNode;
+import inet.node.ethernet.EthernetLink;
+
+
 import inet.node.ethernet.Eth100M;
-import inet.node.ethernet.Eth10M;
-import inet.physicallayer.wired.common.WireJunction;
+
 import ned.DatarateChannel;
 import inet.node.tsn.TsnSwitch;
 import inet.node.tsn.TsnDevice;
 
 
-network TwoHosts2
+network TwoHosts2 extends TsnNetworkBase
 {
     submodules:
         hostA: TsnDevice {
             parameters:
-                @display("p=100,100");
+                @display("p=300,100");
         }
         hostB: TsnDevice {
             parameters:
-                @display("p=300,100");
+                @display("p=500,100");
         }
         hostC: TsnDevice {
             parameters:
-                @display("p=191,272");
+                @display("p=391,272");
         }
         tsnSwitch: TsnSwitch {
             parameters:
-                @display("p=191,169");
+                @display("p=391,169");
         }
     connections:
         hostA.ethg++ <--> Eth100M <--> tsnSwitch.ethg++;
