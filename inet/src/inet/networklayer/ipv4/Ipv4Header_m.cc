@@ -1898,7 +1898,7 @@ unsigned int Ipv4OptionTimestampDescriptor::getFieldTypeFlags(int field) const
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        FD_ISEDITABLE,    // FIELD_flag
+        0,    // FIELD_flag
         FD_ISEDITABLE,    // FIELD_overflow
         FD_ISEDITABLE,    // FIELD_nextIdx
         FD_ISARRAY | FD_ISRESIZABLE,    // FIELD_recordAddress
@@ -2067,7 +2067,6 @@ void Ipv4OptionTimestampDescriptor::setFieldValueAsString(omnetpp::any_ptr objec
     }
     Ipv4OptionTimestamp *pp = omnetpp::fromAnyPtr<Ipv4OptionTimestamp>(object); (void)pp;
     switch (field) {
-        case FIELD_flag: pp->setFlag((inet::TimestampFlag)string2enum(value, "inet::TimestampFlag")); break;
         case FIELD_overflow: pp->setOverflow(string2long(value)); break;
         case FIELD_nextIdx: pp->setNextIdx(string2long(value)); break;
         case FIELD_recordTimestamp: pp->setRecordTimestamp(i,string2simtime(value)); break;
@@ -2106,7 +2105,6 @@ void Ipv4OptionTimestampDescriptor::setFieldValue(omnetpp::any_ptr object, int f
     }
     Ipv4OptionTimestamp *pp = omnetpp::fromAnyPtr<Ipv4OptionTimestamp>(object); (void)pp;
     switch (field) {
-        case FIELD_flag: pp->setFlag(static_cast<inet::TimestampFlag>(value.intValue())); break;
         case FIELD_overflow: pp->setOverflow(omnetpp::checked_int_cast<short>(value.intValue())); break;
         case FIELD_nextIdx: pp->setNextIdx(omnetpp::checked_int_cast<short>(value.intValue())); break;
         case FIELD_recordTimestamp: pp->setRecordTimestamp(i,value.doubleValue()); break;

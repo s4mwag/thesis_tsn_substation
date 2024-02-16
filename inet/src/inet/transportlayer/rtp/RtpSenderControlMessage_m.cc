@@ -317,7 +317,7 @@ unsigned int RtpSenderControlMessageDescriptor::getFieldTypeFlags(int field) con
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        FD_ISEDITABLE,    // FIELD_command
+        0,    // FIELD_command
         FD_ISEDITABLE,    // FIELD_commandParameter1
         FD_ISEDITABLE,    // FIELD_commandParameter2
     };
@@ -472,7 +472,6 @@ void RtpSenderControlMessageDescriptor::setFieldValueAsString(omnetpp::any_ptr o
     }
     RtpSenderControlMessage *pp = omnetpp::fromAnyPtr<RtpSenderControlMessage>(object); (void)pp;
     switch (field) {
-        case FIELD_command: pp->setCommand((inet::rtp::RtpSenderControlMessageCommands)string2enum(value, "inet::rtp::RtpSenderControlMessageCommands")); break;
         case FIELD_commandParameter1: pp->setCommandParameter1(string2double(value)); break;
         case FIELD_commandParameter2: pp->setCommandParameter2(string2double(value)); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'RtpSenderControlMessage'", field);
@@ -508,7 +507,6 @@ void RtpSenderControlMessageDescriptor::setFieldValue(omnetpp::any_ptr object, i
     }
     RtpSenderControlMessage *pp = omnetpp::fromAnyPtr<RtpSenderControlMessage>(object); (void)pp;
     switch (field) {
-        case FIELD_command: pp->setCommand(static_cast<inet::rtp::RtpSenderControlMessageCommands>(value.intValue())); break;
         case FIELD_commandParameter1: pp->setCommandParameter1(static_cast<float>(value.doubleValue())); break;
         case FIELD_commandParameter2: pp->setCommandParameter2(static_cast<float>(value.doubleValue())); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'RtpSenderControlMessage'", field);

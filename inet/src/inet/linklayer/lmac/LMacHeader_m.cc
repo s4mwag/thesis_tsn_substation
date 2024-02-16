@@ -422,7 +422,7 @@ unsigned int LMacHeaderBaseDescriptor::getFieldTypeFlags(int field) const
     static unsigned int fieldTypeFlags[] = {
         0,    // FIELD_srcAddr
         0,    // FIELD_destAddr
-        FD_ISEDITABLE,    // FIELD_type
+        0,    // FIELD_type
         FD_ISEDITABLE,    // FIELD_mySlot
         FD_ISARRAY | FD_ISRESIZABLE,    // FIELD_occupiedSlots
     };
@@ -587,7 +587,6 @@ void LMacHeaderBaseDescriptor::setFieldValueAsString(omnetpp::any_ptr object, in
     }
     LMacHeaderBase *pp = omnetpp::fromAnyPtr<LMacHeaderBase>(object); (void)pp;
     switch (field) {
-        case FIELD_type: pp->setType((inet::LMacType)string2enum(value, "inet::LMacType")); break;
         case FIELD_mySlot: pp->setMySlot(string2long(value)); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'LMacHeaderBase'", field);
     }
@@ -624,7 +623,6 @@ void LMacHeaderBaseDescriptor::setFieldValue(omnetpp::any_ptr object, int field,
     }
     LMacHeaderBase *pp = omnetpp::fromAnyPtr<LMacHeaderBase>(object); (void)pp;
     switch (field) {
-        case FIELD_type: pp->setType(static_cast<inet::LMacType>(value.intValue())); break;
         case FIELD_mySlot: pp->setMySlot(omnetpp::checked_int_cast<int>(value.intValue())); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'LMacHeaderBase'", field);
     }

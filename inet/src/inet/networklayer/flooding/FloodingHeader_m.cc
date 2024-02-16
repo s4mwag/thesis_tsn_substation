@@ -366,7 +366,7 @@ unsigned int FloodingHeaderDescriptor::getFieldTypeFlags(int field) const
         0,    // FIELD_destAddr
         FD_ISEDITABLE,    // FIELD_ttl
         FD_ISEDITABLE,    // FIELD_seqNum
-        0,    // FIELD_protocolId
+        FD_ISEDITABLE,    // FIELD_protocolId
         FD_ISEDITABLE,    // FIELD_payloadLengthField
     };
     return (field >= 0 && field < 6) ? fieldTypeFlags[field] : 0;
@@ -534,6 +534,7 @@ void FloodingHeaderDescriptor::setFieldValueAsString(omnetpp::any_ptr object, in
     switch (field) {
         case FIELD_ttl: pp->setTtl(string2long(value)); break;
         case FIELD_seqNum: pp->setSeqNum(string2ulong(value)); break;
+        case FIELD_protocolId: pp->setProtocolId((inet::IpProtocolId)string2enum(value, "inet::IpProtocolId")); break;
         case FIELD_payloadLengthField: pp->setPayloadLengthField(B(string2long(value))); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'FloodingHeader'", field);
     }
@@ -573,6 +574,7 @@ void FloodingHeaderDescriptor::setFieldValue(omnetpp::any_ptr object, int field,
     switch (field) {
         case FIELD_ttl: pp->setTtl(omnetpp::checked_int_cast<int>(value.intValue())); break;
         case FIELD_seqNum: pp->setSeqNum(omnetpp::checked_int_cast<unsigned long>(value.intValue())); break;
+        case FIELD_protocolId: pp->setProtocolId(static_cast<inet::IpProtocolId>(value.intValue())); break;
         case FIELD_payloadLengthField: pp->setPayloadLengthField(B(value.intValueInUnit("B"))); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'FloodingHeader'", field);
     }

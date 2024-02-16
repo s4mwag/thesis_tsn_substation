@@ -383,7 +383,7 @@ unsigned int OspfPacketBaseDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,    // FIELD_version
-        FD_ISEDITABLE,    // FIELD_type
+        0,    // FIELD_type
         FD_ISEDITABLE,    // FIELD_packetLengthField
         0,    // FIELD_routerID
         0,    // FIELD_areaID
@@ -565,7 +565,6 @@ void OspfPacketBaseDescriptor::setFieldValueAsString(omnetpp::any_ptr object, in
     OspfPacketBase *pp = omnetpp::fromAnyPtr<OspfPacketBase>(object); (void)pp;
     switch (field) {
         case FIELD_version: pp->setVersion(string2long(value)); break;
-        case FIELD_type: pp->setType((inet::ospf::OspfPacketType)string2enum(value, "inet::ospf::OspfPacketType")); break;
         case FIELD_packetLengthField: pp->setPacketLengthField(string2long(value)); break;
         case FIELD_crc: pp->setCrc(string2ulong(value)); break;
         case FIELD_crcMode: pp->setCrcMode((inet::CrcMode)string2enum(value, "inet::CrcMode")); break;
@@ -607,7 +606,6 @@ void OspfPacketBaseDescriptor::setFieldValue(omnetpp::any_ptr object, int field,
     OspfPacketBase *pp = omnetpp::fromAnyPtr<OspfPacketBase>(object); (void)pp;
     switch (field) {
         case FIELD_version: pp->setVersion(omnetpp::checked_int_cast<short>(value.intValue())); break;
-        case FIELD_type: pp->setType(static_cast<inet::ospf::OspfPacketType>(value.intValue())); break;
         case FIELD_packetLengthField: pp->setPacketLengthField(omnetpp::checked_int_cast<int>(value.intValue())); break;
         case FIELD_crc: pp->setCrc(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
         case FIELD_crcMode: pp->setCrcMode(static_cast<inet::CrcMode>(value.intValue())); break;

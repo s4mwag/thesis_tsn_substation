@@ -69,7 +69,7 @@ void Ieee8022LlcSocketIo::handleMessageWhenUp(cMessage *message)
         auto packet = check_and_cast<Packet *>(message);
         if (packet->findTag<PacketProtocolTag>() == nullptr) {
             auto packetProtocolTag = packet->addTag<PacketProtocolTag>();
-            packetProtocolTag->setProtocol(&Protocol::'0x88B5');
+            packetProtocolTag->setProtocol(&Protocol::unknown);
         }
         auto& macAddressReq = packet->addTag<MacAddressReq>();
         macAddressReq->setDestAddress(remoteAddress);

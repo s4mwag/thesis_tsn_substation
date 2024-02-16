@@ -656,7 +656,7 @@ unsigned int TcpErrorInfoDescriptor::getFieldTypeFlags(int field) const
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        FD_ISEDITABLE,    // FIELD_errorCode
+        0,    // FIELD_errorCode
         FD_ISEDITABLE,    // FIELD_messageText
     };
     return (field >= 0 && field < 2) ? fieldTypeFlags[field] : 0;
@@ -806,7 +806,6 @@ void TcpErrorInfoDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int 
     }
     TcpErrorInfo *pp = omnetpp::fromAnyPtr<TcpErrorInfo>(object); (void)pp;
     switch (field) {
-        case FIELD_errorCode: pp->setErrorCode((inet::TcpErrorCode)string2enum(value, "inet::TcpErrorCode")); break;
         case FIELD_messageText: pp->setMessageText((value)); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'TcpErrorInfo'", field);
     }
@@ -840,7 +839,6 @@ void TcpErrorInfoDescriptor::setFieldValue(omnetpp::any_ptr object, int field, i
     }
     TcpErrorInfo *pp = omnetpp::fromAnyPtr<TcpErrorInfo>(object); (void)pp;
     switch (field) {
-        case FIELD_errorCode: pp->setErrorCode(static_cast<inet::TcpErrorCode>(value.intValue())); break;
         case FIELD_messageText: pp->setMessageText(value.stringValue()); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'TcpErrorInfo'", field);
     }

@@ -749,7 +749,7 @@ unsigned int GpsrOptionDescriptor::getFieldTypeFlags(int field) const
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        FD_ISEDITABLE,    // FIELD_routingMode
+        0,    // FIELD_routingMode
         FD_ISCOMPOUND,    // FIELD_destinationPosition
         FD_ISCOMPOUND,    // FIELD_perimeterRoutingStartPosition
         FD_ISCOMPOUND,    // FIELD_perimeterRoutingForwardPosition
@@ -924,7 +924,6 @@ void GpsrOptionDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int fi
     }
     GpsrOption *pp = omnetpp::fromAnyPtr<GpsrOption>(object); (void)pp;
     switch (field) {
-        case FIELD_routingMode: pp->setRoutingMode((inet::GpsrForwardingMode)string2enum(value, "inet::GpsrForwardingMode")); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'GpsrOption'", field);
     }
 }
@@ -962,7 +961,6 @@ void GpsrOptionDescriptor::setFieldValue(omnetpp::any_ptr object, int field, int
     }
     GpsrOption *pp = omnetpp::fromAnyPtr<GpsrOption>(object); (void)pp;
     switch (field) {
-        case FIELD_routingMode: pp->setRoutingMode(static_cast<inet::GpsrForwardingMode>(value.intValue())); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'GpsrOption'", field);
     }
 }

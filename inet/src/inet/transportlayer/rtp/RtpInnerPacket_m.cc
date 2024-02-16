@@ -457,7 +457,7 @@ unsigned int RtpInnerPacketDescriptor::getFieldTypeFlags(int field) const
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        FD_ISEDITABLE,    // FIELD_type
+        0,    // FIELD_type
         FD_ISEDITABLE,    // FIELD_commonName
         FD_ISEDITABLE,    // FIELD_mtu
         FD_ISEDITABLE,    // FIELD_bandwidth
@@ -662,7 +662,6 @@ void RtpInnerPacketDescriptor::setFieldValueAsString(omnetpp::any_ptr object, in
     }
     RtpInnerPacket *pp = omnetpp::fromAnyPtr<RtpInnerPacket>(object); (void)pp;
     switch (field) {
-        case FIELD_type: pp->setType((inet::rtp::RtpInpType)string2enum(value, "inet::rtp::RtpInpType")); break;
         case FIELD_commonName: pp->setCommonName((value)); break;
         case FIELD_mtu: pp->setMtu(string2long(value)); break;
         case FIELD_bandwidth: pp->setBandwidth(string2long(value)); break;
@@ -717,7 +716,6 @@ void RtpInnerPacketDescriptor::setFieldValue(omnetpp::any_ptr object, int field,
     }
     RtpInnerPacket *pp = omnetpp::fromAnyPtr<RtpInnerPacket>(object); (void)pp;
     switch (field) {
-        case FIELD_type: pp->setType(static_cast<inet::rtp::RtpInpType>(value.intValue())); break;
         case FIELD_commonName: pp->setCommonName(value.stringValue()); break;
         case FIELD_mtu: pp->setMtu(omnetpp::checked_int_cast<int>(value.intValue())); break;
         case FIELD_bandwidth: pp->setBandwidth(omnetpp::checked_int_cast<int>(value.intValue())); break;

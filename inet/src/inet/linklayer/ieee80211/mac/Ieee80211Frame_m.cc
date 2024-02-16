@@ -863,7 +863,7 @@ unsigned int Ieee80211MacHeaderDescriptor::getFieldTypeFlags(int field) const
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        FD_ISEDITABLE,    // FIELD_type
+        0,    // FIELD_type
         FD_ISEDITABLE,    // FIELD_toDS
         FD_ISEDITABLE,    // FIELD_fromDS
         FD_ISEDITABLE,    // FIELD_moreFragments
@@ -1068,7 +1068,6 @@ void Ieee80211MacHeaderDescriptor::setFieldValueAsString(omnetpp::any_ptr object
     }
     Ieee80211MacHeader *pp = omnetpp::fromAnyPtr<Ieee80211MacHeader>(object); (void)pp;
     switch (field) {
-        case FIELD_type: pp->setType((inet::ieee80211::Ieee80211FrameType)string2enum(value, "inet::ieee80211::Ieee80211FrameType")); break;
         case FIELD_toDS: pp->setToDS(string2bool(value)); break;
         case FIELD_fromDS: pp->setFromDS(string2bool(value)); break;
         case FIELD_moreFragments: pp->setMoreFragments(string2bool(value)); break;
@@ -1123,7 +1122,6 @@ void Ieee80211MacHeaderDescriptor::setFieldValue(omnetpp::any_ptr object, int fi
     }
     Ieee80211MacHeader *pp = omnetpp::fromAnyPtr<Ieee80211MacHeader>(object); (void)pp;
     switch (field) {
-        case FIELD_type: pp->setType(static_cast<inet::ieee80211::Ieee80211FrameType>(value.intValue())); break;
         case FIELD_toDS: pp->setToDS(value.boolValue()); break;
         case FIELD_fromDS: pp->setFromDS(value.boolValue()); break;
         case FIELD_moreFragments: pp->setMoreFragments(value.boolValue()); break;
@@ -3410,7 +3408,7 @@ unsigned int Ieee80211DataHeaderDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         0,    // FIELD_address4
-        FD_ISEDITABLE,    // FIELD_ackPolicy
+        0,    // FIELD_ackPolicy
         FD_ISEDITABLE,    // FIELD_tid
         FD_ISEDITABLE,    // FIELD_aMsduPresent
     };
@@ -3569,7 +3567,6 @@ void Ieee80211DataHeaderDescriptor::setFieldValueAsString(omnetpp::any_ptr objec
     }
     Ieee80211DataHeader *pp = omnetpp::fromAnyPtr<Ieee80211DataHeader>(object); (void)pp;
     switch (field) {
-        case FIELD_ackPolicy: pp->setAckPolicy((inet::ieee80211::AckPolicy)string2enum(value, "inet::ieee80211::AckPolicy")); break;
         case FIELD_tid: pp->setTid(string2ulong(value)); break;
         case FIELD_aMsduPresent: pp->setAMsduPresent(string2bool(value)); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'Ieee80211DataHeader'", field);
@@ -3606,7 +3603,6 @@ void Ieee80211DataHeaderDescriptor::setFieldValue(omnetpp::any_ptr object, int f
     }
     Ieee80211DataHeader *pp = omnetpp::fromAnyPtr<Ieee80211DataHeader>(object); (void)pp;
     switch (field) {
-        case FIELD_ackPolicy: pp->setAckPolicy(static_cast<inet::ieee80211::AckPolicy>(value.intValue())); break;
         case FIELD_tid: pp->setTid(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
         case FIELD_aMsduPresent: pp->setAMsduPresent(value.boolValue()); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'Ieee80211DataHeader'", field);

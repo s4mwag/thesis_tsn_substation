@@ -347,7 +347,7 @@ unsigned int IcmpHeaderDescriptor::getFieldTypeFlags(int field) const
         0,    // FIELD_type
         FD_ISEDITABLE,    // FIELD_code
         FD_ISEDITABLE,    // FIELD_chksum
-        FD_ISEDITABLE,    // FIELD_crcMode
+        0,    // FIELD_crcMode
     };
     return (field >= 0 && field < 4) ? fieldTypeFlags[field] : 0;
 }
@@ -513,7 +513,6 @@ void IcmpHeaderDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int fi
     switch (field) {
         case FIELD_code: pp->setCode(string2long(value)); break;
         case FIELD_chksum: pp->setChksum(string2long(value)); break;
-        case FIELD_crcMode: pp->setCrcMode((inet::CrcMode)string2enum(value, "inet::CrcMode")); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'IcmpHeader'", field);
     }
 }
@@ -550,7 +549,6 @@ void IcmpHeaderDescriptor::setFieldValue(omnetpp::any_ptr object, int field, int
     switch (field) {
         case FIELD_code: pp->setCode(omnetpp::checked_int_cast<int>(value.intValue())); break;
         case FIELD_chksum: pp->setChksum(omnetpp::checked_int_cast<int>(value.intValue())); break;
-        case FIELD_crcMode: pp->setCrcMode(static_cast<inet::CrcMode>(value.intValue())); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'IcmpHeader'", field);
     }
 }

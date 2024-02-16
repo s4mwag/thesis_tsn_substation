@@ -1239,7 +1239,7 @@ unsigned int GptpBaseDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,    // FIELD_majorSdoId
-        FD_ISEDITABLE,    // FIELD_messageType
+        0,    // FIELD_messageType
         FD_ISEDITABLE,    // FIELD_minorVersionPTP
         FD_ISEDITABLE,    // FIELD_versionPTP
         FD_ISEDITABLE,    // FIELD_messageLengthField
@@ -1541,7 +1541,6 @@ void GptpBaseDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int fiel
     GptpBase *pp = omnetpp::fromAnyPtr<GptpBase>(object); (void)pp;
     switch (field) {
         case FIELD_majorSdoId: pp->setMajorSdoId(string2ulong(value)); break;
-        case FIELD_messageType: pp->setMessageType((inet::GptpMessageType)string2enum(value, "inet::GptpMessageType")); break;
         case FIELD_minorVersionPTP: pp->setMinorVersionPTP(string2ulong(value)); break;
         case FIELD_versionPTP: pp->setVersionPTP(string2ulong(value)); break;
         case FIELD_messageLengthField: pp->setMessageLengthField(string2ulong(value)); break;
@@ -1597,7 +1596,6 @@ void GptpBaseDescriptor::setFieldValue(omnetpp::any_ptr object, int field, int i
     GptpBase *pp = omnetpp::fromAnyPtr<GptpBase>(object); (void)pp;
     switch (field) {
         case FIELD_majorSdoId: pp->setMajorSdoId(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
-        case FIELD_messageType: pp->setMessageType(static_cast<inet::GptpMessageType>(value.intValue())); break;
         case FIELD_minorVersionPTP: pp->setMinorVersionPTP(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
         case FIELD_versionPTP: pp->setVersionPTP(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
         case FIELD_messageLengthField: pp->setMessageLengthField(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
@@ -1801,7 +1799,7 @@ unsigned int GptpTlvDescriptor::getFieldTypeFlags(int field) const
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        FD_ISEDITABLE,    // FIELD_tlvType
+        0,    // FIELD_tlvType
         FD_ISEDITABLE,    // FIELD_lengthField
     };
     return (field >= 0 && field < 2) ? fieldTypeFlags[field] : 0;
@@ -1959,7 +1957,6 @@ void GptpTlvDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int field
     }
     GptpTlv *pp = omnetpp::fromAnyPtr<GptpTlv>(object); (void)pp;
     switch (field) {
-        case FIELD_tlvType: pp->setTlvType((inet::GptpTlvType)string2enum(value, "inet::GptpTlvType")); break;
         case FIELD_lengthField: pp->setLengthField(string2ulong(value)); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'GptpTlv'", field);
     }
@@ -1993,7 +1990,6 @@ void GptpTlvDescriptor::setFieldValue(omnetpp::any_ptr object, int field, int i,
     }
     GptpTlv *pp = omnetpp::fromAnyPtr<GptpTlv>(object); (void)pp;
     switch (field) {
-        case FIELD_tlvType: pp->setTlvType(static_cast<inet::GptpTlvType>(value.intValue())); break;
         case FIELD_lengthField: pp->setLengthField(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'GptpTlv'", field);
     }

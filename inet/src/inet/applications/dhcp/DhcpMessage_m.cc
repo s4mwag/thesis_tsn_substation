@@ -735,9 +735,9 @@ unsigned int DhcpOptionsDescriptor::getFieldTypeFlags(int field) const
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        FD_ISEDITABLE,    // FIELD_messageType
+        0,    // FIELD_messageType
         FD_ISEDITABLE,    // FIELD_hostName
-        FD_ISARRAY | FD_ISEDITABLE | FD_ISRESIZABLE,    // FIELD_parameterRequestList
+        FD_ISARRAY | FD_ISRESIZABLE,    // FIELD_parameterRequestList
         0,    // FIELD_clientIdentifier
         0,    // FIELD_requestedIp
         0,    // FIELD_subnetMask
@@ -955,9 +955,7 @@ void DhcpOptionsDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int f
     }
     DhcpOptions *pp = omnetpp::fromAnyPtr<DhcpOptions>(object); (void)pp;
     switch (field) {
-        case FIELD_messageType: pp->setMessageType((inet::DhcpMessageType)string2enum(value, "inet::DhcpMessageType")); break;
         case FIELD_hostName: pp->setHostName((value)); break;
-        case FIELD_parameterRequestList: pp->setParameterRequestList(i,(inet::DhcpOptionCode)string2enum(value, "inet::DhcpOptionCode")); break;
         case FIELD_renewalTime: pp->setRenewalTime(string2simtime(value)); break;
         case FIELD_rebindingTime: pp->setRebindingTime(string2simtime(value)); break;
         case FIELD_leaseTime: pp->setLeaseTime(string2simtime(value)); break;
@@ -1004,9 +1002,7 @@ void DhcpOptionsDescriptor::setFieldValue(omnetpp::any_ptr object, int field, in
     }
     DhcpOptions *pp = omnetpp::fromAnyPtr<DhcpOptions>(object); (void)pp;
     switch (field) {
-        case FIELD_messageType: pp->setMessageType(static_cast<inet::DhcpMessageType>(value.intValue())); break;
         case FIELD_hostName: pp->setHostName(value.stringValue()); break;
-        case FIELD_parameterRequestList: pp->setParameterRequestList(i,static_cast<inet::DhcpOptionCode>(value.intValue())); break;
         case FIELD_renewalTime: pp->setRenewalTime(value.doubleValue()); break;
         case FIELD_rebindingTime: pp->setRebindingTime(value.doubleValue()); break;
         case FIELD_leaseTime: pp->setLeaseTime(value.doubleValue()); break;
@@ -1409,7 +1405,7 @@ unsigned int DhcpMessageDescriptor::getFieldTypeFlags(int field) const
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        FD_ISEDITABLE,    // FIELD_op
+        0,    // FIELD_op
         FD_ISEDITABLE,    // FIELD_htype
         FD_ISEDITABLE,    // FIELD_hlen
         FD_ISEDITABLE,    // FIELD_hops
@@ -1624,7 +1620,6 @@ void DhcpMessageDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int f
     }
     DhcpMessage *pp = omnetpp::fromAnyPtr<DhcpMessage>(object); (void)pp;
     switch (field) {
-        case FIELD_op: pp->setOp((inet::DhcpOpcode)string2enum(value, "inet::DhcpOpcode")); break;
         case FIELD_htype: pp->setHtype(string2long(value)); break;
         case FIELD_hlen: pp->setHlen(string2long(value)); break;
         case FIELD_hops: pp->setHops(string2long(value)); break;
@@ -1679,7 +1674,6 @@ void DhcpMessageDescriptor::setFieldValue(omnetpp::any_ptr object, int field, in
     }
     DhcpMessage *pp = omnetpp::fromAnyPtr<DhcpMessage>(object); (void)pp;
     switch (field) {
-        case FIELD_op: pp->setOp(static_cast<inet::DhcpOpcode>(value.intValue())); break;
         case FIELD_htype: pp->setHtype(omnetpp::checked_int_cast<int>(value.intValue())); break;
         case FIELD_hlen: pp->setHlen(omnetpp::checked_int_cast<int>(value.intValue())); break;
         case FIELD_hops: pp->setHops(omnetpp::checked_int_cast<int>(value.intValue())); break;

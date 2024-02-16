@@ -334,7 +334,7 @@ unsigned int CsmaCaMacHeaderDescriptor::getFieldTypeFlags(int field) const
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        FD_ISEDITABLE,    // FIELD_type
+        0,    // FIELD_type
         FD_ISEDITABLE,    // FIELD_headerLengthField
         0,    // FIELD_transmitterAddress
         0,    // FIELD_receiverAddress
@@ -494,7 +494,6 @@ void CsmaCaMacHeaderDescriptor::setFieldValueAsString(omnetpp::any_ptr object, i
     }
     CsmaCaMacHeader *pp = omnetpp::fromAnyPtr<CsmaCaMacHeader>(object); (void)pp;
     switch (field) {
-        case FIELD_type: pp->setType((inet::CsmaCaMacHeaderType)string2enum(value, "inet::CsmaCaMacHeaderType")); break;
         case FIELD_headerLengthField: pp->setHeaderLengthField(string2ulong(value)); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'CsmaCaMacHeader'", field);
     }
@@ -530,7 +529,6 @@ void CsmaCaMacHeaderDescriptor::setFieldValue(omnetpp::any_ptr object, int field
     }
     CsmaCaMacHeader *pp = omnetpp::fromAnyPtr<CsmaCaMacHeader>(object); (void)pp;
     switch (field) {
-        case FIELD_type: pp->setType(static_cast<inet::CsmaCaMacHeaderType>(value.intValue())); break;
         case FIELD_headerLengthField: pp->setHeaderLengthField(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'CsmaCaMacHeader'", field);
     }
@@ -1436,7 +1434,7 @@ unsigned int CsmaCaMacTrailerDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,    // FIELD_fcs
-        FD_ISEDITABLE,    // FIELD_fcsMode
+        0,    // FIELD_fcsMode
     };
     return (field >= 0 && field < 2) ? fieldTypeFlags[field] : 0;
 }
@@ -1586,7 +1584,6 @@ void CsmaCaMacTrailerDescriptor::setFieldValueAsString(omnetpp::any_ptr object, 
     CsmaCaMacTrailer *pp = omnetpp::fromAnyPtr<CsmaCaMacTrailer>(object); (void)pp;
     switch (field) {
         case FIELD_fcs: pp->setFcs(string2ulong(value)); break;
-        case FIELD_fcsMode: pp->setFcsMode((inet::FcsMode)string2enum(value, "inet::FcsMode")); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'CsmaCaMacTrailer'", field);
     }
 }
@@ -1620,7 +1617,6 @@ void CsmaCaMacTrailerDescriptor::setFieldValue(omnetpp::any_ptr object, int fiel
     CsmaCaMacTrailer *pp = omnetpp::fromAnyPtr<CsmaCaMacTrailer>(object); (void)pp;
     switch (field) {
         case FIELD_fcs: pp->setFcs(omnetpp::checked_int_cast<uint32_t>(value.intValue())); break;
-        case FIELD_fcsMode: pp->setFcsMode(static_cast<inet::FcsMode>(value.intValue())); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'CsmaCaMacTrailer'", field);
     }
 }
