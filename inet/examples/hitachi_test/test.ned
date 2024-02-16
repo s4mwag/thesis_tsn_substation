@@ -3,26 +3,24 @@ package inet.examples.hitachi_test;
 import inet.node.ethernet.EthernetHub;
 import inet.node.ethernet.Eth100M;
 import inet.node.ethernet.Eth10M;
-import inet.node.ethernet.EthernetHost;
-import inet.node.ethernet.EthernetSwitch;
-import inet.node.inet.StandardHost2;
 import inet.physicallayer.wired.common.WireJunction;
 import ned.DatarateChannel;
 import inet.node.tsn.TsnSwitch;
+import inet.node.tsn.TsnDevice;
 
 
 network TwoHosts2
 {
     submodules:
-        hostA: StandardHost2 {
+        hostA: TsnDevice {
             parameters:
                 @display("p=100,100");
         }
-        hostB: StandardHost2 {
+        hostB: TsnDevice {
             parameters:
                 @display("p=300,100");
         }
-        hostC: StandardHost2 {
+        hostC: TsnDevice {
             parameters:
                 @display("p=191,272");
         }
