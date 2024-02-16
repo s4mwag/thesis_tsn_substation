@@ -1,0 +1,12 @@
+# Ignore everything
+*
+
+# But do not ignore directories, as we need to traverse them
+!*/
+ 
+# Do not ignore .c, .h and omnet related files
+!*.cc
+!*.h
+!*.ned
+!*.ini
+!*.anf
