@@ -10,6 +10,7 @@ import inet.node.ethernet.Eth100M;
 import ned.DatarateChannel;
 import inet.node.tsn.TsnSwitch;
 import inet.node.tsn.TsnDevice;
+import inet.node.tsn.TsnClock;
 
 
 network TwoHosts2 extends TsnNetworkBase
@@ -31,8 +32,12 @@ network TwoHosts2 extends TsnNetworkBase
             parameters:
                 @display("p=391,169");
         }
+        gPTPclock: TsnClock {
+            @display("p=191,37");
+        }
     connections:
         hostA.ethg++ <--> Eth100M <--> tsnSwitch.ethg++;
         hostB.ethg++ <--> Eth100M <--> tsnSwitch.ethg++;
         hostC.ethg++ <--> Eth100M <--> tsnSwitch.ethg++;
+        gPTPclock.ethg++ <--> Eth100M <--> tsnSwitch.ethg++;
 }
