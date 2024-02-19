@@ -36,3 +36,28 @@ network TwoHosts2 extends TsnNetworkBase
         hostC.ethg++ <--> Eth100M <--> tsnSwitch.ethg++;
         gPTPclock.ethg++ <--> Eth100M <--> tsnSwitch.ethg++;
 }
+
+network SimpleSubstationSetupEthernet extends TsnNetworkBase
+{
+    submodules:
+        IDE_A: TsnDevice {
+            parameters:
+                @display("p=298,77");
+        }
+        IDE_B: TsnDevice {
+            parameters:
+                @display("p=493,77");
+        }
+        MU: TsnDevice {
+            parameters:
+                @display("p=391,272");
+        }
+        switch: TsnSwitch {
+            parameters:
+                @display("p=391,169");
+        }
+    connections:
+        IDE_A.ethg++ <--> Eth100M <--> switch.ethg++;
+        IDE_B.ethg++ <--> Eth100M <--> switch.ethg++;
+        MU.ethg++ <--> Eth100M <--> switch.ethg++;
+}
