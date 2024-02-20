@@ -12,14 +12,21 @@ namespace queueing {
 
 Define_Module(ActivePacketSource);
 
+clocktime_t delayInitial;
+bool firstGooseMessage = true;
+int goosePacketSent = 0;
+
+
 void ActivePacketSource::initialize(int stage)
 {
+
     ClockUserModuleMixin::initialize(stage);
     if (stage == INITSTAGE_LOCAL) {
         initialProductionOffset = par("initialProductionOffset");
         productionIntervalParameter = &par("productionInterval");
         productionTimer = new ClockEvent("ProductionTimer");
         scheduleForAbsoluteTime = par("scheduleForAbsoluteTime");
+        useGoose = par("useGoose");
     }
     else if (stage == INITSTAGE_QUEUEING) {
         checkPacketOperationSupport(outputGate);
@@ -48,10 +55,28 @@ void ActivePacketSource::handleParameterChange(const char *name)
 
 void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
 {
-    if (scheduleForAbsoluteTime)
-        scheduleClockEventAt(getClockTime() + delay, productionTimer);
-    else
-        scheduleClockEventAfter(delay, productionTimer);
+    if(useGoose){
+
+        if (firstGooseMessage){
+            delayInitial = delay;
+            firstGooseMessage = false;
+            goosePacketSent = 1;
+        }
+        else{
+            delayInitial = delayInitial * 2;
+            goosePacketSent += 1;
+
+            if (goosePacketSent >= 3){
+                firstGooseMessage = true;
+                goosePacketSent = 0;
+            }
+        }
+
+        if (scheduleForAbsoluteTime)
+            scheduleClockEventAt(getClockTime() + delayInitial, productionTimer);
+        else
+            scheduleClockEventAfter(delayInitial, productionTimer);
+    }
 }
 
 void ActivePacketSource::scheduleProductionTimerAndProducePacket()
