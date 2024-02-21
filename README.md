@@ -6,7 +6,7 @@ Thesis: TSN in Digital substations
 1. Install Omnet 6.0.2 on your Windows or Linux system
 2. Download INET 4.5.2 https://github.com/inet-framework/inet/releases/download/v4.5.2/inet-4.5.2-src.tgz
 3. Clone the repository into your omnet folder
-4. Move the files inside the folder to a temporary folder
+4. Move the files inside the repository folder to a temporary folder
 5. Open Omnet and choose the repository folder "thesis_tsn_substation" as your workspace (DO NOT AUTOMATICALLY INSTALL INET).
 6. In Omnet: "File" 
 -> "Import" 
