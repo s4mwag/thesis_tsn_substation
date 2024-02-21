@@ -12,7 +12,7 @@ namespace queueing {
 
 Define_Module(ActivePacketSource);
 
-clocktime_t delayInitial;
+clocktime_t nextPacketDelay;
 bool firstGooseMessage = true;
 int goosePacketSent = 0;
 
@@ -57,13 +57,15 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
 {
     if(useGoose){
 
-        if (firstGooseMessage){
-            delayInitial = delay;
+        int gooseEvent = rand() % 10;
+
+        if (firstGooseMessage && gooseEvent < 2){
+            nextPacketDelay = (delay / 100);
             firstGooseMessage = false;
             goosePacketSent = 1;
         }
-        else{
-            delayInitial = delayInitial * 2;
+        else if(goosePacketSent > 0){
+            nextPacketDelay = nextPacketDelay * 2;
             goosePacketSent += 1;
 
             if (goosePacketSent >= 3){
@@ -71,11 +73,20 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
                 goosePacketSent = 0;
             }
         }
+        else{
+            nextPacketDelay = delay;
+        }
 
         if (scheduleForAbsoluteTime)
-            scheduleClockEventAt(getClockTime() + delayInitial, productionTimer);
+            scheduleClockEventAt(getClockTime() + nextPacketDelay, productionTimer);
         else
-            scheduleClockEventAfter(delayInitial, productionTimer);
+            scheduleClockEventAfter(nextPacketDelay, productionTimer);
+    }
+    else{
+        if (scheduleForAbsoluteTime)
+            scheduleClockEventAt(getClockTime() + delay, productionTimer);
+        else
+            scheduleClockEventAfter(delay, productionTimer);
     }
 }
 
