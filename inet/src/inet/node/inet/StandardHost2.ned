@@ -54,11 +54,11 @@ module StandardHost2 extends ApplicationLayerNodeBase
         //eth[*].macLayer.typename = default("EthernetMacLayer");
         //eth[*].phyLayer.typename = default("EthernetPhyLayer");
     submodules:
-        sourceApp[numSourceApps]: EthernetSourceApp if activateLLCsource {
+        sourceApp[numSourceApps]: Ieee8022LlcSourceApp if activateLLCsource {
             parameters:
                 @display("p=847.0841,374.10657,row,150");
         }
-        sinkApp[numSinkApps]: EthernetSinkApp if activateLLCsink {
+        sinkApp[numSinkApps]: Ieee8022LlcSinkApp if activateLLCsink {
             parameters:
                 @display("p=1147.7054,374.10657,row,150");
         }
