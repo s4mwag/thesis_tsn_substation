@@ -1,13 +1,13 @@
 package inet.examples.hitachi_test;
 
-import inet.networks.base.TsnNetworkBase;
+import inet.networks.base.TsnNetworkBase2;
 import inet.node.tsn.TsnSwitch;
 import inet.node.tsn.TsnDevice;
 import inet.node.tsn.TsnClock;
 import inet.node.inet.StandardHost;
 import inet.node.ethernet.Eth100M;
 
-network IntegrationExampleSmall extends TsnNetworkBase
+network IntegrationExampleSmall extends TsnNetworkBase2
 {
     submodules:
         IDE_A: StandardHost {
@@ -42,7 +42,7 @@ network IntegrationExampleSmall extends TsnNetworkBase
         
 }
 
-network MultiCast extends TsnNetworkBase
+network MultiCast extends TsnNetworkBase2
 {
     submodules:
         IDE_A: StandardHost {
