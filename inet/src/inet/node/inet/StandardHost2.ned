@@ -10,7 +10,10 @@ package inet.node.inet;
 
 import inet.node.base.ApplicationLayerNodeBase;
 import inet.applications.ethernet.EtherTrafGen;
+import inet.applications.ethernet.EtherAppClient;
+import inet.applications.ethernet.EtherAppServer;
 import inet.applications.ethernet.EthernetSinkApp;
+import inet.applications.ethernet.EthernetSourceApp;
 import inet.applications.ieee8022.Ieee8022LlcSourceApp;
 import inet.applications.ieee8022.Ieee8022LlcSinkApp;
 
