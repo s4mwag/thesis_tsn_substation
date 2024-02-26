@@ -17,8 +17,11 @@ Define_Module(ActivePacketSource);
 
 clocktime_t nextPacketDelay;
 bool firstGooseMessage = true;
-int goosePacketSent = 0;
-
+int gooseCopiesSent = 1;
+double gooseCopyDelay = 0.01;
+bool firstPacket = true;
+double firstScheduledTime;
+double pastRandomScheduledTime;
 // Add a member variable to store the sorted random times
 std::vector<double> randomTimes;
 
@@ -40,12 +43,14 @@ void ActivePacketSource::initialize(int stage)
                 randomTimes.push_back(randomTime);
             }
             std::sort(randomTimes.begin(), randomTimes.end()); // Sort the times
+            firstScheduledTime = randomTimes.front();
+            //randomTimes.erase(unique(randomTimes.begin(), randomTimes.end()), randomTimes.end());
         }
     }
     else if (stage == INITSTAGE_QUEUEING) {
         checkPacketOperationSupport(outputGate);
-        if (!productionTimer->isScheduled())
-            scheduleProductionTimerAndProducePacket();
+        //if (!productionTimer->isScheduled())
+        //    scheduleProductionTimerAndProducePacket();
         if (!randomTimes.empty() && useGoose == true) {
             scheduleProductionTimer(randomTimes.front());
         }
@@ -110,27 +115,62 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
 */
 void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
 {
-    int totalPackets = 100;
-    clocktime_t totalDuration = 10;
-    // Calculate a random delay for the next packet
-    //std::default_random_engine generator(std::random_device{}()); // Random number generator
-    //std::uniform_real_distribution<double> distribution(0.0, totalDuration); // Uniform distribution between 0 and totalDuration (10 seconds)
-    nextPacketDelay = uniform(0.0, 10.0);
-    // Generate a random delay for the next packet
-    //nextPacketDelay = distribution(generator);
+
 
     if (productionTimer->isScheduled()) {
         cancelEvent(productionTimer);
     }
     if (!randomTimes.empty()) {
-        double nextTime = randomTimes.front(); // Get the next scheduled time
-        randomTimes.erase(randomTimes.begin());
-        if (scheduleForAbsoluteTime)
-            scheduleClockEventAt(nextTime, productionTimer);
-        else
-            scheduleClockEventAfter(nextTime - simTime().dbl(), productionTimer); // Schedule after the difference to now
 
-        //randomTimes.erase(randomTimes.begin()); // Remove the scheduled time
+        if(!firstPacket){
+
+            double nextRandomTime = randomTimes.front() - simTime().dbl(); // Get the next scheduled time
+
+            double currentCopyDelay = gooseCopyDelay * gooseCopiesSent;
+
+            if (scheduleForAbsoluteTime){
+                if((nextRandomTime > currentCopyDelay) && (gooseCopiesSent < 4)){ //&& (gooseCopiesSent < 4)
+                    scheduleClockEventAt((pastRandomScheduledTime + currentCopyDelay), productionTimer);
+                    gooseCopiesSent++;
+
+                }
+                else{
+                    scheduleClockEventAt(randomTimes.front(), productionTimer);
+                    gooseCopiesSent = 1;
+                    pastRandomScheduledTime = randomTimes.front();
+                    randomTimes.erase(randomTimes.begin()); // Remove the scheduled time
+
+                }
+            }
+            /*
+            else{
+                if((nextRandomTime > currentCopyDelay) && (gooseCopiesSent < 4)){
+                    scheduleClockEventAfter(currentCopyDelay, productionTimer); // Schedule after the difference to now
+                    gooseCopiesSent++;
+
+                }
+                else{
+                    scheduleClockEventAfter(nextRandomTime, productionTimer);
+                    gooseCopiesSent = 1;
+                    randomTimes.erase(randomTimes.begin()); // Remove the scheduled time
+
+                }
+            }
+            */
+        }
+        else{
+            if (scheduleForAbsoluteTime)
+                scheduleClockEventAt(randomTimes.front(), productionTimer);
+            else
+                scheduleClockEventAfter((randomTimes.front() - simTime().dbl()), productionTimer);
+
+            pastRandomScheduledTime = randomTimes.front();
+            randomTimes.erase(randomTimes.begin());
+            gooseCopiesSent = 1;
+            firstPacket = false;
+        }
+
+
     }
     else{
         if (scheduleForAbsoluteTime)
@@ -138,6 +178,7 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
         else
             scheduleClockEventAfter(delay, productionTimer);
     }
+
 }
 
 void ActivePacketSource::scheduleProductionTimerAndProducePacket()
@@ -171,7 +212,13 @@ void ActivePacketSource::scheduleProductionTimerAndProducePacket()
 void ActivePacketSource::producePacket()
 {
     auto packet = createPacket();
-    EV_INFO << "Producing packet" << EV_FIELD(packet) << EV_ENDL;
+    if(gooseCopiesSent > 1){
+        EV_INFO << simTime().dbl() << " GOOSE Copy Produced " << firstScheduledTime << gooseCopiesSent << EV_FIELD(packet) << EV_ENDL;
+    }
+    else{
+        EV_INFO << simTime().dbl() << " GOOSE Packet Produced" << EV_FIELD(packet) << EV_ENDL;
+    }
+
     emit(packetPushedSignal, packet);
     pushOrSendPacket(packet, outputGate, consumer);
     updateDisplayString();
