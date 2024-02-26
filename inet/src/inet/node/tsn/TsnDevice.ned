@@ -8,7 +8,7 @@
 package inet.node.tsn;
 
 import inet.applications.contract.IApp;
-import inet.node.inet.StandardHost2;
+import inet.node.inet.StandardHost;
 
 //
 // This module represents a Time-Sensitive Networking (TSN) hardware end device
@@ -17,7 +17,7 @@ import inet.node.inet.StandardHost2;
 // Ethernet networks. All TSN features are optional and they can be combined with
 // other Ethernet features.
 //
-module TsnDevice extends StandardHost2
+module TsnDevice extends StandardHost
 {
     parameters:
         bool hasTimeSynchronization = default(false); // enable IEEE 802.1 AS time synchronization
