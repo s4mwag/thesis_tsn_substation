@@ -213,7 +213,7 @@ void ActivePacketSource::producePacket()
 {
     auto packet = createPacket();
     if(gooseCopiesSent > 1){
-        EV_INFO << simTime().dbl() << " GOOSE Copy Produced " << firstScheduledTime << gooseCopiesSent << EV_FIELD(packet) << EV_ENDL;
+        EV_INFO << simTime().dbl() << " GOOSE Copy Produced " << gooseCopiesSent << EV_FIELD(packet) << EV_ENDL;
     }
     else{
         EV_INFO << simTime().dbl() << " GOOSE Packet Produced" << EV_FIELD(packet) << EV_ENDL;
