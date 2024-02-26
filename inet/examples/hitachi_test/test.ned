@@ -4,25 +4,24 @@ import inet.networks.base.TsnNetworkBase2;
 import inet.node.tsn.TsnSwitch;
 import inet.node.tsn.TsnDevice;
 import inet.node.tsn.TsnClock;
-import inet.node.inet.StandardHost;
 import inet.node.ethernet.Eth100M;
 
 network IntegrationExampleSmall extends TsnNetworkBase2
 {
     submodules:
-        IDE_A: StandardHost {
+        IDE_A: TsnDevice {
             parameters:
                 @display("p=298,77");
         }
-        IDE_B: StandardHost {
+        IDE_B: TsnDevice {
             parameters:
                 @display("p=391,77");
         }
-        IDE_C: StandardHost {
+        IDE_C: TsnDevice {
             parameters:
                 @display("p=501,77");
         }
-        MU: StandardHost {
+        MU: TsnDevice {
             parameters:
                 @display("p=391,272");
         }
@@ -45,19 +44,19 @@ network IntegrationExampleSmall extends TsnNetworkBase2
 network MultiCast extends TsnNetworkBase2
 {
     submodules:
-        IDE_A: StandardHost {
+        IDE_A: TsnDevice {
             parameters:
                 @display("p=298,77");
         }
-        IDE_B: StandardHost {
+        IDE_B: TsnDevice {
             parameters:
                 @display("p=391,77");
         }
-        IDE_C: StandardHost {
+        IDE_C: TsnDevice {
             parameters:
                 @display("p=501,77");
         }
-        MU: StandardHost {
+        MU: TsnDevice {
             parameters:
                 @display("p=391,272");
         }
