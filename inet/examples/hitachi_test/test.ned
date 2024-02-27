@@ -9,15 +9,15 @@ import inet.node.ethernet.Eth100M;
 network IntegrationExampleSmall extends TsnNetworkBase2
 {
     submodules:
-        IDE_A: TsnDevice {
+        IED_A: TsnDevice {
             parameters:
                 @display("p=298,77");
         }
-        IDE_B: TsnDevice {
+        IED_B: TsnDevice {
             parameters:
                 @display("p=391,77");
         }
-        IDE_C: TsnDevice {
+        IED_C: TsnDevice {
             parameters:
                 @display("p=501,77");
         }
@@ -34,9 +34,9 @@ network IntegrationExampleSmall extends TsnNetworkBase2
         }
     connections:
         gPTPclock.ethg++ <--> Eth100M <--> switch.ethg++;
-        IDE_A.ethg++ <--> Eth100M <--> switch.ethg++;
-        IDE_B.ethg++ <--> Eth100M <--> switch.ethg++;
-        IDE_C.ethg++ <--> Eth100M <--> switch.ethg++;
+        IED_A.ethg++ <--> Eth100M <--> switch.ethg++;
+        IED_B.ethg++ <--> Eth100M <--> switch.ethg++;
+        IED_C.ethg++ <--> Eth100M <--> switch.ethg++;
         MU.ethg++ <--> Eth100M <--> switch.ethg++;
         
 }
@@ -44,15 +44,15 @@ network IntegrationExampleSmall extends TsnNetworkBase2
 network MultiCast extends TsnNetworkBase2
 {
     submodules:
-        IDE_A: TsnDevice {
+        IED_A: TsnDevice {
             parameters:
                 @display("p=298,77");
         }
-        IDE_B: TsnDevice {
+        IED_B: TsnDevice {
             parameters:
                 @display("p=391,77");
         }
-        IDE_C: TsnDevice {
+        IED_C: TsnDevice {
             parameters:
                 @display("p=501,77");
         }
@@ -65,8 +65,8 @@ network MultiCast extends TsnNetworkBase2
                 @display("p=391,169");
         }
     connections:
-        IDE_A.ethg++ <--> Eth100M <--> switch.ethg++;
-        IDE_B.ethg++ <--> Eth100M <--> switch.ethg++;
-        IDE_C.ethg++ <--> Eth100M <--> switch.ethg++;
+        IED_A.ethg++ <--> Eth100M <--> switch.ethg++;
+        IED_B.ethg++ <--> Eth100M <--> switch.ethg++;
+        IED_C.ethg++ <--> Eth100M <--> switch.ethg++;
         MU.ethg++ <--> Eth100M <--> switch.ethg++;
 }
