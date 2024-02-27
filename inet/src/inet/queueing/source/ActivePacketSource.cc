@@ -24,7 +24,6 @@ double firstScheduledTime;
 double pastRandomScheduledTime = 0;
 // Add a member variable to store the sorted random times
 std::vector<double> randomTimes;
-bool nextPacketIsCopy = false;
 int oldIndex = 0;
 
 
@@ -49,7 +48,6 @@ void ActivePacketSource::initialize(int stage)
             //randomTimes.erase(unique(randomTimes.begin(), randomTimes.end()), randomTimes.end());
         }
         scheduleClockEventAt(randomTimes.front(), productionTimer);
-        nextPacketIsCopy = false;
         pastRandomScheduledTime = randomTimes.front();
         randomTimes.erase(randomTimes.begin()); // Remove the scheduled time
         EV_INFO << "First event scheduled: " << gooseCopiesSent << EV_ENDL;
@@ -134,18 +132,24 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
 
         if (scheduleForAbsoluteTime) {
             if (gooseCopiesSent < 3) {
-                double currentCopyDelay = gooseCopyDelay * std::pow(2, gooseCopiesSent);
+                double currentCopyDelay = gooseCopyDelay * (std::pow(2, gooseCopiesSent));
                 if (timeSinceLastEvent > currentCopyDelay) {
-                    nextPacketIsCopy = true;
+                    if(gooseCopiesSent > 1){
+                        double copyScheduledTime = pastRandomScheduledTime + currentCopyDelay;
+                        scheduleClockEventAt(copyScheduledTime, productionTimer);
+                        gooseCopiesSent++;
+                        EV_INFO << "Copy scheduled at: " << copyScheduledTime << " with index " << gooseCopiesSent << EV_ENDL;
+                    }
+                    else{
+                        double copyScheduledTime = pastRandomScheduledTime + currentCopyDelay;
+                        scheduleClockEventAt(copyScheduledTime, productionTimer);
+                        gooseCopiesSent++;
+                        EV_INFO << "Copy scheduled at: " << copyScheduledTime << " with index " << gooseCopiesSent << EV_ENDL;
+                    }
                     // Schedule a copy if the time since the last event is larger than the current copy delay
-                    double copyScheduledTime = pastRandomScheduledTime + currentCopyDelay;
-                    scheduleClockEventAt(copyScheduledTime, productionTimer);
-                    gooseCopiesSent++;
-                    //lastCopyCheck++;
-                    EV_INFO << "Copy scheduled at: " << copyScheduledTime << " with index " << gooseCopiesSent << EV_ENDL;
+
                 } else {
                     // Schedule next event and reset gooseCopiesSent if the time since the last event is not sufficient for another copy
-                    //nextPacketIsCopy = false;
                     scheduleClockEventAt(nextRandomTime, productionTimer);
                     pastRandomScheduledTime = nextRandomTime;
                     randomTimes.erase(randomTimes.begin()); // Remove the scheduled time
