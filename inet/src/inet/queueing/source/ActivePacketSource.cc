@@ -6,25 +6,21 @@
 
 
 #include "inet/queueing/source/ActivePacketSource.h"
-#include <random>
-#include <vector>
-#include <algorithm>
+
 
 namespace inet {
 namespace queueing {
 
 Define_Module(ActivePacketSource);
 
+// Definition of global variables
 clocktime_t nextPacketDelay;
-bool firstGooseMessage = true;
 double gooseCopiesSent = 0;
 double gooseCopyDelay = 0.025;
-bool firstPacket = true;
-double firstScheduledTime;
-double pastRandomScheduledTime = 0;
-// Add a member variable to store the sorted random times
-std::vector<double> randomTimes;
+double pastEventTime = 0;
+std::vector<double> randomTimes; // Add a member variable to store the sorted random times
 int oldIndex = 0;
+double currentCopyDelay = 0;
 
 
 void ActivePacketSource::initialize(int stage)
@@ -37,31 +33,31 @@ void ActivePacketSource::initialize(int stage)
         productionTimer = new ClockEvent("ProductionTimer");
         scheduleForAbsoluteTime = par("scheduleForAbsoluteTime");
         useGoose = par("useGoose");
-        randomTimes.reserve(100); // Reserve space for 100 elements
+        numberOfGooseEvents = par("numberOfGooseEvents");
+
+        // Gather the "sim-time-limit" variable from the ini file
+        cConfigOption simTimeConfig("sim-time-limit", true,cConfigOption::Type::CFG_DOUBLE, "s", "300", "");
+        double maxSimTime = cSimulation::getActiveSimulation()->getEnvir()->getConfig()->getAsDouble(&simTimeConfig);
+
         if(useGoose == true){
-            for (int i = 0; i < 100; ++i) { // Generate 100 float values between 0 - 10
-                double randomTime = uniform(0.0, 10.0);
+            randomTimes.reserve(numberOfGooseEvents); // Reserve space for the number of goose events
+
+            // Generate 100 float values between 0 - "sim-time-limit"
+            for (int i = 0; i < numberOfGooseEvents; i++) {
+                double randomTime = uniform(0.0, maxSimTime);
                 randomTimes.push_back(randomTime);
             }
+
             std::sort(randomTimes.begin(), randomTimes.end()); // Sort the times
-            //firstScheduledTime = randomTimes.front();
-            //randomTimes.erase(unique(randomTimes.begin(), randomTimes.end()), randomTimes.end());
+            scheduleClockEventAt(randomTimes.front(), productionTimer); // Schedule first event
+            pastEventTime = randomTimes.front();
+            randomTimes.erase(randomTimes.begin()); // Remove the scheduled event
         }
-        scheduleClockEventAt(randomTimes.front(), productionTimer);
-        pastRandomScheduledTime = randomTimes.front();
-        randomTimes.erase(randomTimes.begin()); // Remove the scheduled time
-        EV_INFO << "First event scheduled: " << gooseCopiesSent << EV_ENDL;
-        updateDisplayString();
     }
     else if (stage == INITSTAGE_QUEUEING) {
-        //checkPacketOperationSupport(outputGate);
-        //if (!productionTimer->isScheduled() && useGoose == true)
-        //    scheduleProductionTimerAndProducePacket();
-        if (!randomTimes.empty() && useGoose == true) {
-            //scheduleProductionTimer(randomTimes.front());
-            //scheduleProductionTimerAndProducePacket();
-
-        }
+        checkPacketOperationSupport(outputGate);
+        if (!productionTimer->isScheduled())
+            scheduleProductionTimerAndProducePacket();
     }
 
 }
@@ -83,131 +79,59 @@ void ActivePacketSource::handleParameterChange(const char *name)
     if (!strcmp(name, "initialProductionOffset"))
         initialProductionOffset = par("initialProductionOffset");
 }
-/*
-void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
-{
-    if(useGoose){
 
-        int gooseEvent = rand() % 10;
-
-        if (firstGooseMessage && gooseEvent < 2){
-            nextPacketDelay = (delay / 100);
-            firstGooseMessage = false;
-            goosePacketSent = 1;
-        }
-        else if(goosePacketSent > 0){
-            nextPacketDelay = nextPacketDelay * 2;
-            goosePacketSent += 1;
-
-            if (goosePacketSent >= 3){
-                firstGooseMessage = true;
-                goosePacketSent = 0;
-            }
-        }
-        else{
-            nextPacketDelay = delay;
-        }
-
-        if (scheduleForAbsoluteTime)
-            scheduleClockEventAt(getClockTime() + nextPacketDelay, productionTimer);
-        else
-            scheduleClockEventAfter(nextPacketDelay, productionTimer);
-    }
-    else{
-        if (scheduleForAbsoluteTime)
-            scheduleClockEventAt(getClockTime() + delay, productionTimer);
-        else
-            scheduleClockEventAfter(delay, productionTimer);
-    }
-}
-*/
 void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
 {
     if (productionTimer->isScheduled()) {
         cancelEvent(productionTimer);
     }
+
+    // randomTimes will only be populated if useGoose is set to "true"
     if(!randomTimes.empty()){
-        double nextRandomTime = randomTimes.front(); // Get the next scheduled absolute time
-        double timeSinceLastEvent = nextRandomTime - pastRandomScheduledTime; // Calculate time since last event
+        double nextEventTime = randomTimes.front(); // Get the next scheduled absolute time
+        double timeBetweenEvents = nextEventTime - pastEventTime; // Calculate time since last event
 
         if (scheduleForAbsoluteTime) {
             if (gooseCopiesSent < 3) {
-                double currentCopyDelay = gooseCopyDelay * (std::pow(2, gooseCopiesSent));
-                if (timeSinceLastEvent > currentCopyDelay) {
-                    if(gooseCopiesSent > 1){
-                        double copyScheduledTime = pastRandomScheduledTime + currentCopyDelay;
-                        scheduleClockEventAt(copyScheduledTime, productionTimer);
-                        gooseCopiesSent++;
-                        EV_INFO << "Copy scheduled at: " << copyScheduledTime << " with index " << gooseCopiesSent << EV_ENDL;
-                    }
-                    else{
-                        double copyScheduledTime = pastRandomScheduledTime + currentCopyDelay;
-                        scheduleClockEventAt(copyScheduledTime, productionTimer);
-                        gooseCopiesSent++;
-                        EV_INFO << "Copy scheduled at: " << copyScheduledTime << " with index " << gooseCopiesSent << EV_ENDL;
-                    }
-                    // Schedule a copy if the time since the last event is larger than the current copy delay
 
-                } else {
-                    // Schedule next event and reset gooseCopiesSent if the time since the last event is not sufficient for another copy
-                    scheduleClockEventAt(nextRandomTime, productionTimer);
-                    pastRandomScheduledTime = nextRandomTime;
-                    randomTimes.erase(randomTimes.begin()); // Remove the scheduled time
-                    gooseCopiesSent = 0;
-                    EV_INFO << "Event scheduled at: " << nextRandomTime << EV_ENDL;
+                currentCopyDelay += (gooseCopyDelay * (std::pow(2, gooseCopiesSent)));
+
+                if (timeBetweenEvents > currentCopyDelay) {
+                    // Schedule a copy if the time since the last event is larger than the current copy delay
+                    double copyScheduledTime = pastEventTime + currentCopyDelay;
+                    gooseCopiesSent++;
+                    scheduleClockEventAt(copyScheduledTime, productionTimer);
+                    EV_INFO << "Copy scheduled at: " << copyScheduledTime << " with delay from event of: " << currentCopyDelay << EV_ENDL;
                 }
-            } else {
+                else {
+                    // Schedule next event and reset gooseCopiesSent if the time to the next event is not sufficient for another copy
+                    scheduleClockEventAt(nextEventTime, productionTimer);
+                    pastEventTime = nextEventTime;
+                    randomTimes.erase(randomTimes.begin()); // Remove the scheduled time
+                    gooseCopiesSent = 0; //Reset the variables for calculating the use of copied messages
+                    currentCopyDelay = 0;
+                    EV_INFO << "Event scheduled at: " << nextEventTime << EV_ENDL;
+                }
+            }
+            else {
                 // Directly schedule next event if maximum copies have been sent
-                scheduleClockEventAt(nextRandomTime, productionTimer);
-                pastRandomScheduledTime = nextRandomTime;
-                randomTimes.erase(randomTimes.begin()); // Remove the scheduled time
-                gooseCopiesSent = 0;
-                EV_INFO << "Event scheduled at: " << nextRandomTime << " after max copies" << EV_ENDL;
+                scheduleClockEventAt(nextEventTime, productionTimer);
+                pastEventTime = nextEventTime;
+                randomTimes.erase(randomTimes.begin()); // Remove the scheduled event
+                gooseCopiesSent = 0; //Reset the variables for calculating the use of copied messages
+                currentCopyDelay = 0;
+                EV_INFO << "Event scheduled at: " << nextEventTime << " after max copies" << EV_ENDL;
             }
         }
     }
-}
-
-            /*
-            else{
-                if((nextRandomTime > currentCopyDelay) && (gooseCopiesSent < 4)){
-                    scheduleClockEventAfter(currentCopyDelay, productionTimer); // Schedule after the difference to now
-                    gooseCopiesSent++;
-
-                }
-                else{
-                    scheduleClockEventAfter(nextRandomTime, productionTimer);
-                    gooseCopiesSent = 1;
-                    randomTimes.erase(randomTimes.begin()); // Remove the scheduled time
-
-                }
-            }
-            */
-
-        /*
-        else{
-            if (scheduleForAbsoluteTime)
-                scheduleClockEventAt(randomTimes.front(), productionTimer);
-            //else
-            //    scheduleClockEventAfter((randomTimes.front() - simTime().dbl()), productionTimer);
-
-            pastRandomScheduledTime = randomTimes.front();
-            randomTimes.erase(randomTimes.begin());
-            gooseCopiesSent = 0;
-            firstPacket = false;
-        }
-        */
-
-    //}
-    /*
+    // Scheduling normal periodic traffic
     else{
         if (scheduleForAbsoluteTime)
             scheduleClockEventAt(getClockTime() + delay, productionTimer);
         else
             scheduleClockEventAfter(delay, productionTimer);
     }
-    */
-//}
+}
 
 void ActivePacketSource::scheduleProductionTimerAndProducePacket()
 {
@@ -220,33 +144,21 @@ void ActivePacketSource::scheduleProductionTimerAndProducePacket()
         producePacket();
     }
 }
-/*
-void ActivePacketSource::scheduleProductionTimerAndProducePacket()
-{
-    simtime_t totalTime = 10.0;  // Total time period in seconds
-    int numPackets = 100;  // Total number of packets to distribute
-    simtime_t currentTime = simTime();
 
-    // Cancel any previous scheduling of productionTimer
-    cancelEvent(productionTimer);
-
-    for (int i = 0; i < numPackets; ++i) {
-        simtime_t packetDelay = uniform(0, totalTime);  // Generate random delay within the total time period
-        scheduleAt(currentTime + packetDelay, productionTimer);  // Schedule packet production after the delay
-        currentTime += packetDelay;  // Update current time
-    }
-}
-*/
 void ActivePacketSource::producePacket()
 {
     auto packet = createPacket();
-    if(oldIndex == 0){
-        EV_INFO << simTime().dbl() << " GOOSE Packet Produced" << EV_FIELD(packet) << EV_ENDL;
+    if(useGoose){
+        if(oldIndex == 0){
+            EV_INFO << simTime().dbl() << " GOOSE Packet Produced" << EV_FIELD(packet) << EV_ENDL;
+        }
+        else{
+            EV_INFO << simTime().dbl() << " GOOSE Copy Produced " << (oldIndex) << EV_FIELD(packet) << EV_ENDL;
+        }
+        oldIndex = gooseCopiesSent; //Used to keep track of the previous copied message index since it will be overwritten during scheduling
     }
-    else{
-        EV_INFO << simTime().dbl() << " GOOSE Copy Produced " << (oldIndex) << EV_FIELD(packet) << EV_ENDL;
-    }
-    oldIndex = gooseCopiesSent;
+    else
+        EV_INFO << simTime().dbl() << " Packet Produced " << EV_FIELD(packet) << EV_ENDL;
     emit(packetPushedSignal, packet);
     pushOrSendPacket(packet, outputGate, consumer);
     updateDisplayString();
