@@ -51,6 +51,7 @@ class INET_API TcpSessionApp : public TcpAppBase
     virtual void refreshDisplay() const override;
 
     virtual void parseScript(const char *script);
+    virtual std::string readScriptFromFile();
     virtual Packet *createDataPacket(long sendBytes);
     virtual void sendData();
 
