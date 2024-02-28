@@ -30,6 +30,8 @@ simple ActivePacketSource extends ActivePacketSourceBase like IActivePacketSourc
         double initialProductionOffset @mutable @unit(s) = default(-1s); // initial duration before which packets are not produced. When negative, then produce packet in initialize()
         volatile double productionInterval @unit(s); // elapsed time between subsequent packets pushed to the connected packet consumer
         bool scheduleForAbsoluteTime = default(true); // when a clock is used relative means that setting the clock will not affect the simulation time of the event
+        bool useGoose = default(false);
+        int numberOfGooseEvents = default(100);
         @class(ActivePacketSource);
     gates:
         output out @labels(push);

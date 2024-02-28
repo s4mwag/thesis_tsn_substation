@@ -25,6 +25,8 @@ class INET_API ActivePacketSource : public ClockUserModuleMixin<ActivePacketSour
     cPar *productionIntervalParameter = nullptr;
     ClockEvent *productionTimer = nullptr;
     bool scheduleForAbsoluteTime = false;
+    bool useGoose = false;
+    int numberOfGooseEvents;
 
   protected:
     virtual void initialize(int stage) override;

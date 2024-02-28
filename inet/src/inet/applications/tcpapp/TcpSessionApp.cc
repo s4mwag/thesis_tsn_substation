@@ -16,6 +16,7 @@
 #include "inet/common/packet/chunk/ByteCountChunk.h"
 #include "inet/common/packet/chunk/BytesChunk.h"
 #include "inet/networklayer/common/L3AddressResolver.h"
+#include <fstream>
 
 namespace inet {
 
@@ -41,7 +42,8 @@ void TcpSessionApp::initialize(int stage)
         sendBytes = par("sendBytes");
         commandIndex = 0;
 
-        const char *script = par("sendScript");
+        std::string scriptContent = readScriptFromFile();
+        const char *script = scriptContent.c_str();
         parseScript(script);
 
         if (sendBytes > 0 && commands.size() > 0)
@@ -52,6 +54,18 @@ void TcpSessionApp::initialize(int stage)
             throw cRuntimeError("sendScript is empty");
         timeoutMsg = new cMessage("timer");
     }
+}
+
+std::string TcpSessionApp::readScriptFromFile() {
+    std::ifstream file("sendscript.txt");
+    if (!file.is_open()) {
+        throw cRuntimeError("Unable to open script file");
+    }
+
+    std::string script((std::istreambuf_iterator<char>(file)),
+                        std::istreambuf_iterator<char>());
+    file.close();
+    return script;
 }
 
 void TcpSessionApp::handleStartOperation(LifecycleOperation *operation)
