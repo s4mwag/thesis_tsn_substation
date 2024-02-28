@@ -1838,7 +1838,7 @@ utils.export_data_if_needed(df, props)
                 <property name="xaxis_min" value=""/>
                 <property name="linewidth" value="5.0"/>
                 <property name="legend_format" value=""/>
-                <property name="filter" value="* AND name =~ meanBitLifeTimePerPacket:vector OR name =~ endToEndDelay:vector&#10;AND NOT ((name =~ endToEndDelay:vector) AND (module =~ &quot;IntegrationExampleSmall.IED_B.app[2].thread_9&quot;))"/>
+                <property name="filter" value="* AND name =~ meanBitLifeTimePerPacket:vector OR name =~ endToEndDelay:vector&#10;AND NOT ((name =~ endToEndDelay:vector) AND (module =~ &quot;**.thread_*&quot;))"/>
                 <property name="X.Label.Wrap" value="true"/>
                 <property name="vector_start_time" value=""/>
                 <property name="linestyle" value="solid"/>
