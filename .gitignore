@@ -10,4 +10,5 @@
 !*.ned
 !*.ini
 !*.anf
+!*.py
 /.metadata/
