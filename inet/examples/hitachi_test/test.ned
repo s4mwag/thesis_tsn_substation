@@ -4,25 +4,24 @@ import inet.networks.base.TsnNetworkBase2;
 import inet.node.tsn.TsnSwitch;
 import inet.node.tsn.TsnDevice;
 import inet.node.tsn.TsnClock;
-import inet.node.inet.StandardHost;
 import inet.node.ethernet.Eth100M;
 
 network IntegrationExampleSmall extends TsnNetworkBase2
 {
     submodules:
-        IDE_A: StandardHost {
+        IED_A: TsnDevice {
             parameters:
                 @display("p=298,77");
         }
-        IDE_B: StandardHost {
+        IED_B: TsnDevice {
             parameters:
                 @display("p=391,77");
         }
-        IDE_C: StandardHost {
+        IED_C: TsnDevice {
             parameters:
                 @display("p=501,77");
         }
-        MU: StandardHost {
+        MU: TsnDevice {
             parameters:
                 @display("p=391,272");
         }
@@ -35,9 +34,9 @@ network IntegrationExampleSmall extends TsnNetworkBase2
         }
     connections:
         gPTPclock.ethg++ <--> Eth100M <--> switch.ethg++;
-        IDE_A.ethg++ <--> Eth100M <--> switch.ethg++;
-        IDE_B.ethg++ <--> Eth100M <--> switch.ethg++;
-        IDE_C.ethg++ <--> Eth100M <--> switch.ethg++;
+        IED_A.ethg++ <--> Eth100M <--> switch.ethg++;
+        IED_B.ethg++ <--> Eth100M <--> switch.ethg++;
+        IED_C.ethg++ <--> Eth100M <--> switch.ethg++;
         MU.ethg++ <--> Eth100M <--> switch.ethg++;
         
 }
@@ -45,19 +44,19 @@ network IntegrationExampleSmall extends TsnNetworkBase2
 network MultiCast extends TsnNetworkBase2
 {
     submodules:
-        IDE_A: StandardHost {
+        IED_A: TsnDevice {
             parameters:
                 @display("p=298,77");
         }
-        IDE_B: StandardHost {
+        IED_B: TsnDevice {
             parameters:
                 @display("p=391,77");
         }
-        IDE_C: StandardHost {
+        IED_C: TsnDevice {
             parameters:
                 @display("p=501,77");
         }
-        MU: StandardHost {
+        MU: TsnDevice {
             parameters:
                 @display("p=391,272");
         }
@@ -66,8 +65,8 @@ network MultiCast extends TsnNetworkBase2
                 @display("p=391,169");
         }
     connections:
-        IDE_A.ethg++ <--> Eth100M <--> switch.ethg++;
-        IDE_B.ethg++ <--> Eth100M <--> switch.ethg++;
-        IDE_C.ethg++ <--> Eth100M <--> switch.ethg++;
+        IED_A.ethg++ <--> Eth100M <--> switch.ethg++;
+        IED_B.ethg++ <--> Eth100M <--> switch.ethg++;
+        IED_C.ethg++ <--> Eth100M <--> switch.ethg++;
         MU.ethg++ <--> Eth100M <--> switch.ethg++;
 }
