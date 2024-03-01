@@ -13,14 +13,6 @@ namespace queueing {
 
 Define_Module(ActivePacketSource);
 
-// Definition of global variables
-clocktime_t nextPacketDelay;
-double gooseCopiesSent = 0;
-double gooseCopyDelay = 0.025;
-double pastEventTime = 0;
-std::vector<double> randomTimes; // Add a member variable to store the sorted random times
-int oldIndex = 0;
-double currentCopyDelay = 0;
 
 
 void ActivePacketSource::initialize(int stage)
@@ -37,14 +29,14 @@ void ActivePacketSource::initialize(int stage)
 
         // Gather the "sim-time-limit" variable from the ini file
         cConfigOption simTimeConfig("sim-time-limit", true,cConfigOption::Type::CFG_DOUBLE, "s", "300", "");
-        double maxSimTime = cSimulation::getActiveSimulation()->getEnvir()->getConfig()->getAsDouble(&simTimeConfig);
+        clocktime_t maxSimTime = cSimulation::getActiveSimulation()->getEnvir()->getConfig()->getAsDouble(&simTimeConfig);
 
         if(useGoose == true){
             randomTimes.reserve(numberOfGooseEvents); // Reserve space for the number of goose events
 
             // Generate 100 float values between 0 - "sim-time-limit"
             for (int i = 0; i < numberOfGooseEvents; i++) {
-                double randomTime = uniform(0.0, maxSimTime);
+                clocktime_t randomTime = uniform(0.0, maxSimTime);
                 randomTimes.push_back(randomTime);
             }
 
@@ -88,8 +80,8 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
 
     // randomTimes will only be populated if useGoose is set to "true"
     if(!randomTimes.empty()){
-        double nextEventTime = randomTimes.front(); // Get the next scheduled absolute time
-        double timeBetweenEvents = nextEventTime - pastEventTime; // Calculate time since last event
+        clocktime_t nextEventTime = randomTimes.front(); // Get the next scheduled absolute time
+        clocktime_t timeBetweenEvents = nextEventTime - pastEventTime; // Calculate time since last event
 
         if (scheduleForAbsoluteTime) {
             if (gooseCopiesSent < 3) {
@@ -98,7 +90,7 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
 
                 if (timeBetweenEvents > currentCopyDelay) {
                     // Schedule a copy if the time since the last event is larger than the current copy delay
-                    double copyScheduledTime = pastEventTime + currentCopyDelay;
+                    clocktime_t copyScheduledTime = pastEventTime + currentCopyDelay;
                     gooseCopiesSent++;
                     scheduleClockEventAt(copyScheduledTime, productionTimer);
                     EV_INFO << "Copy scheduled at: " << copyScheduledTime << " with delay from event of: " << currentCopyDelay << EV_ENDL;

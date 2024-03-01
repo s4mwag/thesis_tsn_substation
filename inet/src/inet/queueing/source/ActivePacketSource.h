@@ -27,6 +27,13 @@ class INET_API ActivePacketSource : public ClockUserModuleMixin<ActivePacketSour
     bool scheduleForAbsoluteTime = false;
     bool useGoose = false;
     int numberOfGooseEvents;
+    clocktime_t nextPacketDelay;
+    double gooseCopiesSent = 0;
+    double gooseCopyDelay = 0.025;
+    clocktime_t pastEventTime = 0;
+    std::vector<clocktime_t> randomTimes; // Member variable to store the sorted random times
+    int oldIndex = 0;
+    clocktime_t currentCopyDelay = 0;
 
   protected:
     virtual void initialize(int stage) override;
