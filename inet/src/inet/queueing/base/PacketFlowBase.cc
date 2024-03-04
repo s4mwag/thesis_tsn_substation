@@ -32,8 +32,16 @@ void PacketFlowBase::initialize(int stage)
 
 void PacketFlowBase::handleMessage(cMessage *message)
 {
-    auto packet = check_and_cast<Packet *>(message);
-    pushPacket(packet, packet->getArrivalGate());
+    /*auto packet = check_and_cast<Packet *>(message);
+    pushPacket(packet, packet->getArrivalGate());*/
+
+    if (auto packet = dynamic_cast<inet::Packet *>(message)) {
+        pushPacket(packet, packet->getArrivalGate());
+    }
+    else {
+        EV_INFO << "Handling REQUEST message" << EV_ENDL;
+        send(message,outputGate);
+    }
 }
 
 void PacketFlowBase::checkPacketStreaming(Packet *packet)
