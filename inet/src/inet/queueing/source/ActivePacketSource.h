@@ -29,7 +29,7 @@ class INET_API ActivePacketSource : public ClockUserModuleMixin<ActivePacketSour
     int numberOfGooseEvents;
     clocktime_t nextPacketDelay;
     double gooseCopiesSent = 0;
-    double gooseCopyDelay = 0.025;
+    double gooseCopyDelay = 0.00025;
     clocktime_t pastEventTime = 0;
     std::vector<clocktime_t> randomTimes; // Member variable to store the sorted random times
     int oldIndex = 0;
