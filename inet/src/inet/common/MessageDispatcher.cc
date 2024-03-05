@@ -133,9 +133,12 @@ cGate *MessageDispatcher::handlePacket(Packet *packet, cGate *inGate)
             EV_INFO << "Dispatching packet to socket" << EV_FIELD(socketId) << EV_FIELD(inGate) << EV_FIELD(outGate) << EV_FIELD(packet) << EV_ENDL;
             return outGate;
         }
-        else
-            throw cRuntimeError("handlePacket(): Unknown socket: socketId = %d, pathStartGate = %s, pathEndGate = %s", socketId, inGate->getPathStartGate()->getFullPath().c_str(), inGate->getPathEndGate()->getFullPath().c_str());
-    }
+        else{
+           auto outGate = gate("out", 0);
+           return outGate;
+       }
+               //throw cRuntimeError("handlePacket(): Unknown socket: socketId = %d, pathStartGate = %s, pathEndGate = %s", socketId, inGate->getPathStartGate()->getFullPath().c_str(), inGate->getPathEndGate()->getFullPath().c_str());
+   }
     const auto& dispatchProtocolReq = packet->findTag<DispatchProtocolReq>();
     if (dispatchProtocolReq != nullptr) {
         const auto& packetProtocolTag = packet->findTag<PacketProtocolTag>();
