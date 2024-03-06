@@ -16,29 +16,23 @@ namespace queueing {
 class INET_API GateControlList : public cSimpleModule
 {
   protected:
-    int numGates;
-    clocktime_t offset;
+    int numGates = -1;
+    const char *mapping = nullptr;
     cValueArray *durations = nullptr;
     cValueArray *gateStates = nullptr;
-
-  protected:
-    virtual void initialize(int stage) override;
-    virtual void handleMessage(cMessage *msg) override;
-
-  private:
-    // ownership
+    std::vector<bool> initiallyOpens;
+    std::vector<simtime_t> offsets;
     std::vector<cValueArray *> gateDurations;
 
-    void parseGcl();
-    static std::vector<bool> retrieveGateStates(const char *gateStates, uint numGates);
+  protected:
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int stage) override;
 
-  public:
-    ~GateControlList();
-
+    virtual void parseGcl();
+    virtual std::vector<bool> parseGclLine(const char *gateStates);
 };
 
 } // namespace queueing
 } // namespace inet
 
 #endif
-

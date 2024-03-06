@@ -33,7 +33,7 @@ module Ieee8021qTimeAwareShaper extends CompoundPacketQueueBase
         }
         gateControlList: GateControlList if hasGcl {
             parameters:
-                @display("p=300,225");
+                @display("p=100,330");
         }
         classifier: <default("PcpTrafficClassClassifier")> like IPacketClassifier {
             parameters:
@@ -59,7 +59,7 @@ module Ieee8021qTimeAwareShaper extends CompoundPacketQueueBase
         }
     connections:
         in --> { @display("m=w"); } --> classifier.in;
-        for i = 0 .. numTrafficClasses - 1 {
+        for i=0..numTrafficClasses - 1 {
             classifier.out++ --> queue[i].in;
             queue[i].out --> transmissionSelectionAlgorithm[i].in;
             transmissionSelectionAlgorithm[i].out --> transmissionGate[i].in;
