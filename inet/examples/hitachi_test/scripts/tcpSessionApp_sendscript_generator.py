@@ -1,24 +1,32 @@
 import numpy as np
+import os
 
-#This function generates an amount of numbers that can be used as a sendscript.txt file for a TcpSessionApp in Omnet INET
-def generate_sorted_numbers(amount, lower_bound, upper_bound, constant_value):
-    # Generate the specified amount of random numbers within the given range
-    random_numbers = np.random.uniform(low=lower_bound, high=upper_bound, size=amount)
-    
-    # Sort the numbers in ascending order
+def generate_sorted_numbers(noOfPackets, simulationStart, simulationEnd, bytesPerPacket):
+    random_numbers = np.random.uniform(low=simulationStart, high=simulationEnd, size=noOfPackets)
     sorted_numbers = np.sort(random_numbers)
-    
-    # Format each number with 6 decimal points followed by the constant value, separated by a semicolon
-    formatted_numbers = [f"{number:.6f} {constant_value};" for number in sorted_numbers]
-    
-    # Join all formatted numbers into a single string
+    formatted_numbers = [f"{number:.6f} {bytesPerPacket};" for number in sorted_numbers]
     output = " ".join(formatted_numbers)
     return output
 
-# Example usage
-amount = 100
-lower_bound = 0
-upper_bound = 10
-constant_value = 100
-output = generate_sorted_numbers(amount, lower_bound, upper_bound, constant_value)
-print(output)
+def write_to_file(filename, content):
+    file_exists = os.path.exists(filename)
+    file_index = 1
+    unique_filename = filename
+
+    while file_exists:
+        unique_filename = f"{filename.split('.')[0]}_{file_index}.txt"
+        file_exists = os.path.exists(unique_filename)
+        file_index += 1
+
+    with open(unique_filename, 'w') as file:
+        file.write(content)
+
+noOfPackets = 8333
+simulationStart = 0
+simulationEnd = 10
+bytesPerPacket = 84
+output = generate_sorted_numbers(noOfPackets, simulationStart, simulationEnd, bytesPerPacket)
+
+filename = "sendscript.txt"
+write_to_file(filename, output)
+print(f"Output written to {filename}")
