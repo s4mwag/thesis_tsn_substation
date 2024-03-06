@@ -5,6 +5,7 @@ import inet.node.tsn.TsnSwitch;
 import inet.node.tsn.TsnDevice;
 import inet.node.tsn.TsnClock;
 import inet.node.ethernet.Eth100M;
+import inet.node.inet.StandardHost;
 
 network IntegrationExampleSmall extends TsnNetworkBase2
 {
@@ -106,7 +107,10 @@ network ThreeBays extends TsnNetworkBase2
                 @display("p=791,293");
         }
         gPTPclock: TsnClock {
-            @display("p=268,329");
+            @display("p=242,341");
+        }
+        log_server: StandardHost {
+            @display("p=242,259");
         }
     connections:
         gPTPclock.ethg++ <--> Eth100M <--> switch_1.ethg++;
@@ -125,8 +129,7 @@ network ThreeBays extends TsnNetworkBase2
         switch_1.ethg++ <--> Eth100M <--> switch_2.ethg++;
         switch_1.ethg++ <--> Eth100M <--> switch_3.ethg++;
         switch_2.ethg++ <--> Eth100M <--> switch_3.ethg++;
-
-
+        log_server.ethg++ <--> Eth100M <--> switch_1.ethg++;
 
 }
 
