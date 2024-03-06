@@ -41,6 +41,9 @@ void TcpSessionApp::initialize(int stage)
         tClose = par("tClose");
         sendBytes = par("sendBytes");
         commandIndex = 0;
+        if (par("sendScript").getType() == omnetpp::cPar::STRING) {
+            sendScript = par("sendScript").stringValue();
+        }
 
         std::string scriptContent = readScriptFromFile();
         const char *script = scriptContent.c_str();
@@ -57,7 +60,7 @@ void TcpSessionApp::initialize(int stage)
 }
 
 std::string TcpSessionApp::readScriptFromFile() {
-    std::ifstream file("sendscript.txt");
+    std::ifstream file(sendScript);
     if (!file.is_open()) {
         throw cRuntimeError("Unable to open script file");
     }
