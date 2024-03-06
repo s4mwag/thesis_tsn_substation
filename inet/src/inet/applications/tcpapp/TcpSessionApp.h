@@ -35,6 +35,7 @@ class INET_API TcpSessionApp : public TcpAppBase
     simtime_t tSend;
     simtime_t tClose;
     int sendBytes = 0;
+    std::string sendScript;
 
     // state
     int commandIndex = -1;
