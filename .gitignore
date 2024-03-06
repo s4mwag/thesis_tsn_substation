@@ -11,4 +11,5 @@
 !*.ini
 !*.anf
 !*.py
+!*send*.txt
 /.metadata/
