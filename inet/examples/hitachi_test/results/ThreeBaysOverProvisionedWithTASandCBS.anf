@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <analysis version="2">
     <inputs>
-        <input pattern="ThreeBaysUnderProvisioned-#0.sca"/>
-        <input pattern="ThreeBaysUnderProvisioned-#0.vec"/>
+        <input pattern="ThreeBaysOverProvisionedWithTASandCBS-#0.sca"/>
+        <input pattern="ThreeBaysOverProvisionedWithTASandCBS-#0.vec"/>
     </inputs>
     <charts>
-        <folder id="1830178995" name="Main results">
-            <chart icon="icons/full/obj/linechart.png" id="1204607190" name="Clock drift - all clocks" template="linechart_native" type="LINE">
+        <folder id="1415529980" name="Main results">
+            <chart icon="icons/full/obj/linechart.png" id="1224149822" name="Clock drift - all clocks" template="linechart_native" type="LINE">
                 <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils, ideplot, vectorops as ops
 
@@ -582,7 +582,7 @@ utils.export_data_if_needed(df, props)
                 <property name="xaxis_max" value=""/>
                 <property name="image_export_width" value="9"/>
             </chart>
-            <chart icon="icons/full/obj/linechart.png" id="1001882787" name="Clock drift - synchronized clocks" template="linechart_native" type="LINE">
+            <chart icon="icons/full/obj/linechart.png" id="1980551063" name="Clock drift - synchronized clocks" template="linechart_native" type="LINE">
                 <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -1218,7 +1218,7 @@ utils.export_data_if_needed(df, props)
                 <property name="image_export_width" value="6"/>
                 <property name="include_fields" value="false"/>
             </chart>
-            <chart icon="icons/full/obj/linechart.png" id="568379800" name="End to End Delay GOOSE " template="linechart_native" type="LINE">
+            <chart icon="icons/full/obj/linechart.png" id="1755383391" name="End to End Delay GOOSE " template="linechart_native" type="LINE">
                 <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -1853,7 +1853,7 @@ utils.export_data_if_needed(df, props)
                 <property name="xaxis_max" value=""/>
                 <property name="image_export_width" value="6"/>
             </chart>
-            <chart icon="icons/full/obj/linechart.png" id="520003559" name="End to End Delay SV" template="linechart_native" type="LINE">
+            <chart icon="icons/full/obj/linechart.png" id="1164341073" name="End to End Delay SV" template="linechart_native" type="LINE">
                 <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -2488,7 +2488,7 @@ utils.export_data_if_needed(df, props)
                 <property name="xaxis_max" value=""/>
                 <property name="image_export_width" value="6"/>
             </chart>
-            <chart icon="icons/full/obj/linechart.png" id="453162890" name="End to End Delay SV and GOOSE" template="linechart_native" type="LINE">
+            <chart icon="icons/full/obj/linechart.png" id="1154389086" name="End to End Delay SV and GOOSE" template="linechart_native" type="LINE">
                 <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -3123,7 +3123,7 @@ utils.export_data_if_needed(df, props)
                 <property name="xaxis_max" value=""/>
                 <property name="image_export_width" value="6"/>
             </chart>
-            <chart icon="icons/full/obj/linechart.png" id="2100288838" name="E2E delay SV/GOOSE/MMS" template="linechart_native" type="LINE">
+            <chart icon="icons/full/obj/linechart.png" id="1629457511" name="E2E delay SV/GOOSE/MMS" template="linechart_native" type="LINE">
                 <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -3759,7 +3759,7 @@ utils.export_data_if_needed(df, props)
                 <property name="image_export_width" value="6"/>
                 <property name="include_fields" value="false"/>
             </chart>
-            <chart icon="icons/full/obj/linechart.png" id="1878408790" name="End to End Delay MMS" template="linechart_native" type="LINE">
+            <chart icon="icons/full/obj/linechart.png" id="1961333089" name="End to End Delay MMS" template="linechart_native" type="LINE">
                 <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -4395,7 +4395,7 @@ utils.export_data_if_needed(df, props)
                 <property name="image_export_width" value="6"/>
                 <property name="include_fields" value="false"/>
             </chart>
-            <chart icon="icons/full/obj/linechart.png" id="317135402" name="End to End delay Best Effort" template="linechart_native" type="LINE">
+            <chart icon="icons/full/obj/linechart.png" id="2144808152" name="End to End delay Best Effort" template="linechart_native" type="LINE">
                 <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -5031,7 +5031,7 @@ utils.export_data_if_needed(df, props)
                 <property name="image_export_width" value="6"/>
                 <property name="include_fields" value="false"/>
             </chart>
-            <chart icon="icons/full/obj/linechart.png" id="94074071" name="Packet delay difference to mean Sample Values" template="linechart_native" type="LINE">
+            <chart icon="icons/full/obj/linechart.png" id="854825344" name="Packet delay difference to mean Sample Values" template="linechart_native" type="LINE">
                 <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -5667,7 +5667,7 @@ utils.export_data_if_needed(df, props)
                 <property name="image_export_width" value="6"/>
                 <property name="include_fields" value="false"/>
             </chart>
-            <chart icon="icons/full/obj/histogramchart.png" id="1557725291" name="Packet Delay Difference to Mean: Sample Values" template="histogramchart_vectors_native" type="HISTOGRAM">
+            <chart icon="icons/full/obj/histogramchart.png" id="817017887" name="Packet Delay Difference to Mean: Sample Values" template="histogramchart_vectors_native" type="HISTOGRAM">
                 <script><![CDATA[import math
 import numpy as np
 from omnetpp.scave import results, chart, utils
@@ -6269,7 +6269,7 @@ Show over_underflow cell?
                 <property name="image_export_width" value="6"/>
                 <property name="include_fields" value="false"/>
             </chart>
-            <chart icon="icons/full/obj/linechart.png" id="1375638973" name="Packet Jitter" template="linechart_native" type="LINE">
+            <chart icon="icons/full/obj/linechart.png" id="954681450" name="Packet Jitter" template="linechart_native" type="LINE">
                 <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -6905,7 +6905,7 @@ utils.export_data_if_needed(df, props)
                 <property name="image_export_width" value="6"/>
                 <property name="include_fields" value="false"/>
             </chart>
-            <chart icon="icons/full/obj/linechart.png" id="2120032519" name="Packet Delay Variation" template="linechart_native" type="LINE">
+            <chart icon="icons/full/obj/linechart.png" id="549941030" name="Packet Delay Variation" template="linechart_native" type="LINE">
                 <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -7541,7 +7541,7 @@ utils.export_data_if_needed(df, props)
                 <property name="image_export_width" value="6"/>
                 <property name="include_fields" value="false"/>
             </chart>
-            <chart icon="icons/full/obj/barchart.png" id="544258027" name="TCP packets received" template="barchart_native" type="BAR">
+            <chart icon="icons/full/obj/barchart.png" id="628464914" name="TCP packets received" template="barchart_native" type="BAR">
                 <script><![CDATA[from omnetpp.scave import results, chart, utils
 
 # get chart properties
@@ -8112,9 +8112,9 @@ utils.export_data_if_needed(df, props)
                 <property name="image_export_width" value="6"/>
             </chart>
         </folder>
-        <folder id="1383865564" name="Other interesting results or debugging purposes">
-            <folder id="1810165765" name="Queues">
-                <chart icon="icons/full/obj/barchart.png" id="803442836" name="Overflowed queues" template="barchart_native" type="BAR">
+        <folder id="478839141" name="Other interesting results or debugging purposes">
+            <folder id="1458354255" name="Queues">
+                <chart icon="icons/full/obj/barchart.png" id="710568518" name="Overflowed queues" template="barchart_native" type="BAR">
                     <script><![CDATA[from omnetpp.scave import results, chart, utils
 
 # get chart properties
@@ -8684,7 +8684,7 @@ utils.export_data_if_needed(df, props)
                     <property name="Plot.Antialias" value="true"/>
                     <property name="image_export_width" value="6"/>
                 </chart>
-                <chart icon="icons/full/obj/linechart.png" id="1307097694" name="Queue length all switches" template="linechart_native" type="LINE">
+                <chart icon="icons/full/obj/linechart.png" id="1060659706" name="Queue length all switches" template="linechart_native" type="LINE">
                     <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -9320,7 +9320,7 @@ utils.export_data_if_needed(df, props)
                     <property name="image_export_width" value="6"/>
                     <property name="include_fields" value="false"/>
                 </chart>
-                <chart icon="icons/full/obj/linechart.png" id="610737693" name="Queue bit length all switches" template="linechart_native" type="LINE">
+                <chart icon="icons/full/obj/linechart.png" id="1655341561" name="Queue bit length all switches" template="linechart_native" type="LINE">
                     <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -9956,7 +9956,7 @@ utils.export_data_if_needed(df, props)
                     <property name="image_export_width" value="6"/>
                     <property name="include_fields" value="false"/>
                 </chart>
-                <chart icon="icons/full/obj/linechart.png" id="907057917" name="Queue length switch 1" template="linechart_native" type="LINE">
+                <chart icon="icons/full/obj/linechart.png" id="546543004" name="Queue length switch 1" template="linechart_native" type="LINE">
                     <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -10592,7 +10592,7 @@ utils.export_data_if_needed(df, props)
                     <property name="image_export_width" value="6"/>
                     <property name="include_fields" value="false"/>
                 </chart>
-                <chart icon="icons/full/obj/linechart.png" id="1236920344" name="Queue lengths switch 2" template="linechart_native" type="LINE">
+                <chart icon="icons/full/obj/linechart.png" id="418873870" name="Queue lengths switch 2" template="linechart_native" type="LINE">
                     <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -11228,7 +11228,7 @@ utils.export_data_if_needed(df, props)
                     <property name="image_export_width" value="6"/>
                     <property name="include_fields" value="false"/>
                 </chart>
-                <chart icon="icons/full/obj/linechart.png" id="547103020" name="Queue lengths switch 3" template="linechart_native" type="LINE">
+                <chart icon="icons/full/obj/linechart.png" id="205534851" name="Queue lengths switch 3" template="linechart_native" type="LINE">
                     <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -11864,7 +11864,7 @@ utils.export_data_if_needed(df, props)
                     <property name="image_export_width" value="6"/>
                     <property name="include_fields" value="false"/>
                 </chart>
-                <chart icon="icons/full/obj/linechart.png" id="1869785822" name="Transmission gate queues switch 1" template="linechart_native" type="LINE">
+                <chart icon="icons/full/obj/linechart.png" id="1725413464" name="Transmission gate queues switch 1" template="linechart_native" type="LINE">
                     <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -12500,7 +12500,7 @@ utils.export_data_if_needed(df, props)
                     <property name="image_export_width" value="6"/>
                     <property name="include_fields" value="false"/>
                 </chart>
-                <chart icon="icons/full/obj/linechart.png" id="933549195" name="Transmission gate queues switch 2" template="linechart_native" type="LINE">
+                <chart icon="icons/full/obj/linechart.png" id="1757321875" name="Transmission gate queues switch 2" template="linechart_native" type="LINE">
                     <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -13136,7 +13136,7 @@ utils.export_data_if_needed(df, props)
                     <property name="image_export_width" value="6"/>
                     <property name="include_fields" value="false"/>
                 </chart>
-                <chart icon="icons/full/obj/linechart.png" id="1526864583" name="Transmission gate queues switch 3" template="linechart_native" type="LINE">
+                <chart icon="icons/full/obj/linechart.png" id="1773824397" name="Transmission gate queues switch 3" template="linechart_native" type="LINE">
                     <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -13773,8 +13773,8 @@ utils.export_data_if_needed(df, props)
                     <property name="include_fields" value="false"/>
                 </chart>
             </folder>
-            <folder id="953559885" name="Utilization">
-                <chart icon="icons/full/obj/linechart.png" id="577525897" name="Channel utilization, vector" template="linechart_native" type="LINE">
+            <folder id="1422377954" name="Utilization">
+                <chart icon="icons/full/obj/linechart.png" id="714077568" name="Channel utilization, vector" template="linechart_native" type="LINE">
                     <script><![CDATA[import math
 from omnetpp.scave import results, chart, utils
 
@@ -14415,7 +14415,7 @@ utils.export_data_if_needed(df, props)
                     <property name="legend_automatic" value="true"/>
                     <property name="legend_format" value=""/>
                 </chart>
-                <chart icon="icons/full/obj/histogramchart.png" id="598076385" name="Channel utilization, histogram" template="histogramchart_native" type="HISTOGRAM">
+                <chart icon="icons/full/obj/histogramchart.png" id="1298467520" name="Channel utilization, histogram" template="histogramchart_native" type="HISTOGRAM">
                     <script><![CDATA[from omnetpp.scave import results, chart, utils
 
 # get chart properties
