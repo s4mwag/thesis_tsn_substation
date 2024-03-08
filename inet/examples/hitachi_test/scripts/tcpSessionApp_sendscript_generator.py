@@ -9,24 +9,28 @@ def generate_sorted_numbers(noOfPackets, simulationStart, simulationEnd, bytesPe
     return output
 
 def write_to_file(filename, content):
-    file_exists = os.path.exists(filename)
+    base_filename, file_extension = filename.split('.')
     file_index = 1
-    unique_filename = filename
+    unique_filename = f"{base_filename}_{file_index}.{file_extension}"
+    file_exists = os.path.exists(unique_filename)
 
     while file_exists:
-        unique_filename = f"{filename.split('.')[0]}_{file_index}.txt"
-        file_exists = os.path.exists(unique_filename)
         file_index += 1
+        unique_filename = f"{base_filename}_{file_index}.{file_extension}"
+        file_exists = os.path.exists(unique_filename)
 
     with open(unique_filename, 'w') as file:
         file.write(content)
-
-noOfPackets = 8333
+    print(f"Output written to {unique_filename}")
+    
+noOfPackets = 833
 simulationStart = 0
 simulationEnd = 10
-bytesPerPacket = 84
-output = generate_sorted_numbers(noOfPackets, simulationStart, simulationEnd, bytesPerPacket)
+bytesPerPacket = 1434
+noOfFiles = 4
+filename = "sendscriptIT.txt"
 
-filename = "sendscript.txt"
-write_to_file(filename, output)
-print(f"Output written to {filename}")
+for i in range(noOfFiles):
+    output = generate_sorted_numbers(noOfPackets, simulationStart, simulationEnd, bytesPerPacket)
+    write_to_file(filename, output)
+    
