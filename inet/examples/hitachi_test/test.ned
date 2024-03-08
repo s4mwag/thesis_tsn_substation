@@ -214,8 +214,8 @@ network ThreeBaysUnderProvisioned extends TsnNetworkBase2
         switch_1.ethg++ <--> Eth10M <--> switch_3.ethg++;
         switch_2.ethg++ <--> Eth10M <--> switch_3.ethg++;
         log_server.ethg++ <--> Eth10M <--> switch_1.ethg++;
-        internet_host_1.ethg++ <--> Eth100M <--> switch_1.ethg++;
-        internet_host_2.ethg++ <--> Eth100M <--> switch_1.ethg++;
-        internet_host_3.ethg++ <--> Eth100M <--> switch_3.ethg++;
-        internet_host_4.ethg++ <--> Eth100M <--> switch_3.ethg++;
+        internet_host_1.ethg++ <--> Eth10M <--> switch_1.ethg++;
+        internet_host_2.ethg++ <--> Eth10M <--> switch_1.ethg++;
+        internet_host_3.ethg++ <--> Eth10M <--> switch_3.ethg++;
+        internet_host_4.ethg++ <--> Eth10M <--> switch_3.ethg++;
 }
