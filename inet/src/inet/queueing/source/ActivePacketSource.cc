@@ -25,19 +25,21 @@ void ActivePacketSource::initialize(int stage)
         productionTimer = new ClockEvent("ProductionTimer");
         scheduleForAbsoluteTime = par("scheduleForAbsoluteTime");
         useGoose = par("useGoose");
-        numberOfGooseEvents = par("numberOfGooseEvents");
+        numberOfGooseEventsPerSec = par("numberOfGooseEventsPerSec");
 
         // Gather the "sim-time-limit" variable from the ini file
         cConfigOption simTimeConfig("sim-time-limit", true,cConfigOption::Type::CFG_DOUBLE, "s", "300", "");
-        clocktime_t maxSimTime = cSimulation::getActiveSimulation()->getEnvir()->getConfig()->getAsDouble(&simTimeConfig);
+        double maxSimTime = cSimulation::getActiveSimulation()->getEnvir()->getConfig()->getAsDouble(&simTimeConfig);
 
         if(useGoose == true){
-            randomTimes.reserve(numberOfGooseEvents); // Reserve space for the number of goose events
+            randomTimes.reserve(numberOfGooseEventsPerSec * 10); // Reserve space for the number of goose events
 
             // Generate 100 float values between 0 - "sim-time-limit"
-            for (int i = 0; i < numberOfGooseEvents; i++) {
-                clocktime_t randomTime = uniform(0.0, maxSimTime);
-                randomTimes.push_back(randomTime);
+            for (int j = 0, i = 1; j < maxSimTime; j++, i++){
+                for(int k = 0; k < numberOfGooseEventsPerSec; k++){
+                    clocktime_t randomTime = uniform(j, i);
+                    randomTimes.push_back(randomTime);
+                }
             }
 
             std::sort(randomTimes.begin(), randomTimes.end()); // Sort the times

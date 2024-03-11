@@ -31,7 +31,7 @@ simple ActivePacketSource extends ActivePacketSourceBase like IActivePacketSourc
         volatile double productionInterval @unit(s); // elapsed time between subsequent packets pushed to the connected packet consumer
         bool scheduleForAbsoluteTime = default(true); // when a clock is used relative means that setting the clock will not affect the simulation time of the event
         bool useGoose = default(false);
-        int numberOfGooseEvents = default(100);
+        int numberOfGooseEventsPerSec = default(20);
         @class(ActivePacketSource);
     gates:
         output out @labels(push);

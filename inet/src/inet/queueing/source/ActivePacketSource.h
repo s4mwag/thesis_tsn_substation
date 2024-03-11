@@ -26,7 +26,7 @@ class INET_API ActivePacketSource : public ClockUserModuleMixin<ActivePacketSour
     ClockEvent *productionTimer = nullptr;
     bool scheduleForAbsoluteTime = false;
     bool useGoose = false;
-    int numberOfGooseEvents;
+    int numberOfGooseEventsPerSec;
     clocktime_t nextPacketDelay;
     double gooseCopiesSent = 0;
     double gooseCopyDelay = 0.00025;
