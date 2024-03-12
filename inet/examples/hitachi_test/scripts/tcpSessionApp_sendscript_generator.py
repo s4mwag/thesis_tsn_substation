@@ -1,5 +1,5 @@
 import numpy as np
-import os, glob
+import os, glob, sys
 
 noOfPackets = 0
 simulationStart = 0
@@ -7,6 +7,7 @@ simulationEnd = 0
 bytesPerPacket = 0
 noOfFiles = 0
 filename = ""
+seed_value = 0
 
 def configuration_mms_traffic():
     global noOfPackets, simulationStart, simulationEnd, bytesPerPacket, noOfFiles, filename
@@ -36,6 +37,16 @@ def configuration_log_traffic():
     filename = "sendscriptLOG.txt"
 
 def generate_sorted_numbers(noOfPackets, simulationStart, simulationEnd, bytesPerPacket):
+    global seed_value
+    if len(sys.argv) > 1:
+        try:
+            print("Using seed " + str(seed_value))
+            np.random.seed(seed_value)
+            seed_value = int(sys.argv[1]) 
+        except ValueError:
+            print("Please provide a valid integer for seeding the random generator.")
+            sys.exit(1)
+            
     random_numbers = np.random.uniform(low=simulationStart, high=simulationEnd, size=noOfPackets)
     sorted_numbers = np.sort(random_numbers)
     formatted_numbers = [f"{number:.6f} {bytesPerPacket};" for number in sorted_numbers]
@@ -83,6 +94,8 @@ def move_text_files():
     files = glob.glob('./*.txt')
     for f in files:
         os.replace(f, '../'+f) 
+
+
         
 remove_text_files()
 generate_scripts("mms")
