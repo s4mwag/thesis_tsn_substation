@@ -12,4 +12,5 @@
 !*.anf
 !*.py
 !*send*.txt
+!*run*simulation*.sh
 /.metadata/
