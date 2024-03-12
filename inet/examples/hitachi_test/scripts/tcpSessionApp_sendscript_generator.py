@@ -7,7 +7,7 @@ simulationEnd = 0
 bytesPerPacket = 0
 noOfFiles = 0
 filename = ""
-seed_value = 0
+seed_value = int(sys.argv[1]) * 100
 
 def configuration_mms_traffic():
     global noOfPackets, simulationStart, simulationEnd, bytesPerPacket, noOfFiles, filename
@@ -38,14 +38,10 @@ def configuration_log_traffic():
 
 def generate_sorted_numbers(noOfPackets, simulationStart, simulationEnd, bytesPerPacket):
     global seed_value
+    seed_value += 1
     if len(sys.argv) > 1:
-        try:
-            print("Using seed " + str(seed_value))
-            np.random.seed(seed_value)
-            seed_value = int(sys.argv[1]) 
-        except ValueError:
-            print("Please provide a valid integer for seeding the random generator.")
-            sys.exit(1)
+        np.random.seed(seed_value) 
+
             
     random_numbers = np.random.uniform(low=simulationStart, high=simulationEnd, size=noOfPackets)
     sorted_numbers = np.sort(random_numbers)
