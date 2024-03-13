@@ -43,9 +43,11 @@ void ActivePacketSource::initialize(int stage)
             }
 
             std::sort(randomTimes.begin(), randomTimes.end()); // Sort the times
-            scheduleClockEventAt(randomTimes.front(), productionTimer); // Schedule first event
-            pastEventTime = randomTimes.front();
-            randomTimes.erase(randomTimes.begin()); // Remove the scheduled event
+            //scheduleClockEventAt(randomTimes.front(), productionTimer); // Schedule first event
+            //pastEventTime = randomTimes.front();
+            //randomTimes.erase(randomTimes.begin()); // Remove the scheduled event
+
+            scheduleProductionTimer(0);
         }
     }
     else if (stage == INITSTAGE_QUEUEING) {
@@ -85,13 +87,6 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
 
     bool shouldScheduleHeartbeat = true;
 
-    if (!randomTimes.empty()) {
-        clocktime_t nextEventTime = randomTimes.front();
-        if (nextEventTime <= nextHeartbeatTime) {
-            // Next event is scheduled before the next heartbeat
-            shouldScheduleHeartbeat = false;
-        }
-    }
 
     // randomTimes will only be populated if useGoose is set to "true"
     if(!randomTimes.empty()){
@@ -99,6 +94,15 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
         clocktime_t timeBetweenEvents = nextEventTime - pastEventTime; // Calculate time since last event
 
         if (scheduleForAbsoluteTime) {
+
+            if (!randomTimes.empty()) {
+                clocktime_t nextEventTime = randomTimes.front();
+                if (nextEventTime <= nextHeartbeatTime) {
+                    // Next event is scheduled before the next heartbeat
+                    shouldScheduleHeartbeat = false;
+                }
+            }
+
             if (gooseCopiesSent < 3) {
 
                 currentCopyDelay += (gooseCopyDelay * (std::pow(2, gooseCopiesSent)));
@@ -120,6 +124,12 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
                     EV_INFO << "Event scheduled at: " << nextEventTime << EV_ENDL;
                 }
             }
+            else if (nextEventTime <= nextHeartbeatTime && shouldScheduleHeartbeat) {
+                scheduleClockEventAt(nextHeartbeatTime, productionTimer);
+                lastHeartbeatTime = nextHeartbeatTime;
+                EV_INFO << "Heartbeat scheduled at: " << nextHeartbeatTime << EV_ENDL;
+            }
+
             else {
                 // Directly schedule next event if maximum copies have been sent
                 scheduleClockEventAt(nextEventTime, productionTimer);
