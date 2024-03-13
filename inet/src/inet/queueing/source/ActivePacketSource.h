@@ -35,6 +35,9 @@ class INET_API ActivePacketSource : public ClockUserModuleMixin<ActivePacketSour
     int oldIndex = 0;
     clocktime_t currentCopyDelay = 0;
 
+    clocktime_t nextHeartbeatTime = 0;
+    clocktime_t lastHeartbeatTime = 0;
+
   protected:
     virtual void initialize(int stage) override;
     virtual void handleMessage(cMessage *message) override;

@@ -80,6 +80,19 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
         cancelEvent(productionTimer);
     }
 
+    clocktime_t currentTime = getClockTime();
+    clocktime_t nextHeartbeatTime = lastHeartbeatTime + 0.5; // Schedule heartbeats every 0.5 seconds
+
+    bool shouldScheduleHeartbeat = true;
+
+    if (!randomTimes.empty()) {
+        clocktime_t nextEventTime = randomTimes.front();
+        if (nextEventTime <= nextHeartbeatTime) {
+            // Next event is scheduled before the next heartbeat
+            shouldScheduleHeartbeat = false;
+        }
+    }
+
     // randomTimes will only be populated if useGoose is set to "true"
     if(!randomTimes.empty()){
         clocktime_t nextEventTime = randomTimes.front(); // Get the next scheduled absolute time
