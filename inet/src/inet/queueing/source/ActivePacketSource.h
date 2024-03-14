@@ -37,6 +37,7 @@ class INET_API ActivePacketSource : public ClockUserModuleMixin<ActivePacketSour
 
     clocktime_t nextHeartbeatTime = 0;
     clocktime_t lastHeartbeatTime = 0;
+    std::vector<clocktime_t> heartbeatTimes;
 
   protected:
     virtual void initialize(int stage) override;

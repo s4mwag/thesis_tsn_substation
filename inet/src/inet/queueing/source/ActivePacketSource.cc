@@ -42,6 +42,14 @@ void ActivePacketSource::initialize(int stage)
                 }
             }
 
+            heartbeatTimes.reserve(20);
+            clocktime_t heartbeatInterval = 0;
+            for(int i = 0; i < 20; i++){
+                heartbeatTimes.push_back(heartbeatInterval);
+                heartbeatInterval = heartbeatInterval + 0.5;
+            }
+
+
             std::sort(randomTimes.begin(), randomTimes.end()); // Sort the times
             //scheduleClockEventAt(randomTimes.front(), productionTimer); // Schedule first event
             //pastEventTime = randomTimes.front();
@@ -83,7 +91,7 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
     }
 
     clocktime_t currentTime = getClockTime();
-    clocktime_t nextHeartbeatTime = lastHeartbeatTime + 0.5; // Schedule heartbeats every 0.5 seconds
+    clocktime_t nextHeartbeatTime = heartbeatTimes.front(); // Schedule heartbeats every 0.5 seconds
 
     bool shouldScheduleHeartbeat = true;
 
@@ -93,17 +101,34 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
         clocktime_t nextEventTime = randomTimes.front(); // Get the next scheduled absolute time
         clocktime_t timeBetweenEvents = nextEventTime - pastEventTime; // Calculate time since last event
 
-        if (scheduleForAbsoluteTime) {
-
-            if (!randomTimes.empty()) {
-                clocktime_t nextEventTime = randomTimes.front();
-                if (nextEventTime <= nextHeartbeatTime) {
-                    // Next event is scheduled before the next heartbeat
-                    shouldScheduleHeartbeat = false;
+        if (!randomTimes.empty()) {
+            //clocktime_t nextEventTime = randomTimes.front();
+            EV_INFO << "nextEventTime: " << nextEventTime << " nextHeartbeatTime: " << nextHeartbeatTime << EV_ENDL;
+            if (nextEventTime <= nextHeartbeatTime) {
+                // Next event is scheduled before the next heartbeat
+                shouldScheduleHeartbeat = false;
+                if((currentTime + 0.05) >= nextHeartbeatTime){
+                    heartbeatTimes.erase(heartbeatTimes.begin());
                 }
+                EV_INFO << "Heartbeat disabled" << EV_ENDL;
             }
 
-            if (gooseCopiesSent < 3) {
+            else{
+                shouldScheduleHeartbeat = true;
+                EV_INFO << "Heartbeat enabled" << EV_ENDL;
+            }
+        }
+
+        if (scheduleForAbsoluteTime) {
+
+            if (shouldScheduleHeartbeat) { //&& shouldScheduleHeartbeat(nextEventTime <= nextHeartbeatTime) && shouldScheduleHeartbeat
+                scheduleClockEventAt(nextHeartbeatTime, productionTimer);
+                lastHeartbeatTime = nextHeartbeatTime;
+                heartbeatTimes.erase(heartbeatTimes.begin());
+                EV_INFO << "Heartbeat scheduled at: " << nextHeartbeatTime << EV_ENDL;
+            }
+
+            else if (gooseCopiesSent < 3) {
 
                 currentCopyDelay += (gooseCopyDelay * (std::pow(2, gooseCopiesSent)));
 
@@ -123,11 +148,6 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
                     currentCopyDelay = 0;
                     EV_INFO << "Event scheduled at: " << nextEventTime << EV_ENDL;
                 }
-            }
-            else if (nextEventTime <= nextHeartbeatTime && shouldScheduleHeartbeat) {
-                scheduleClockEventAt(nextHeartbeatTime, productionTimer);
-                lastHeartbeatTime = nextHeartbeatTime;
-                EV_INFO << "Heartbeat scheduled at: " << nextHeartbeatTime << EV_ENDL;
             }
 
             else {
