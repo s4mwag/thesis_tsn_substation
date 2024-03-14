@@ -34,10 +34,14 @@ class INET_API ActivePacketSource : public ClockUserModuleMixin<ActivePacketSour
     std::vector<clocktime_t> randomTimes; // Member variable to store the sorted random times
     int oldIndex = 0;
     clocktime_t currentCopyDelay = 0;
+    std::vector<clocktime_t> goosePeriods;
 
     clocktime_t nextHeartbeatTime = 0;
     clocktime_t lastHeartbeatTime = 0;
     std::vector<clocktime_t> heartbeatTimes;
+    bool shouldScheduleHeartbeat;
+
+    bool firstEvent;
 
   protected:
     virtual void initialize(int stage) override;
