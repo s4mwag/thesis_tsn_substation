@@ -41,8 +41,8 @@ void ActivePacketSource::initialize(int stage)
                     randomTimes.push_back(randomTime);
                 }
             }
-            goosePeriods.reserve(4);
-            goosePeriods = {0.001, 0.001, 0.1, 0.25};
+            gooseCopyPeriods.reserve(4);
+            gooseCopyPeriods = {0.001, 0.001, 0.1, 0.25};
 
             heartbeatTimes.reserve(25);
             clocktime_t heartbeatInterval = 0;
@@ -51,7 +51,7 @@ void ActivePacketSource::initialize(int stage)
                 heartbeatInterval = heartbeatInterval + 0.5;
             }
 
-            firstEvent = true;
+
             std::sort(randomTimes.begin(), randomTimes.end()); // Sort the times
             //scheduleClockEventAt(randomTimes.front(), productionTimer); // Schedule first event
             //pastEventTime = randomTimes.front();
@@ -99,8 +99,6 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
     if (productionTimer->isScheduled()) {
         cancelEvent(productionTimer);
     }
-
-    clocktime_t currentTime = getClockTime();
     clocktime_t nextHeartbeatTime = heartbeatTimes.front(); // Schedule heartbeats every 0.5 seconds
 
     bool shouldScheduleHeartbeat = true;
@@ -112,37 +110,40 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
         clocktime_t timeBetweenEvents = nextEventTime - pastEventTime; // Calculate time since last event
 
         if (!randomTimes.empty()) {
-            //clocktime_t nextEventTime = randomTimes.front();
-            EV_INFO << "nextEventTime: " << nextEventTime << " nextHeartbeatTime: " << nextHeartbeatTime << EV_ENDL;
+
+            // For debugging
+            //EV_INFO << "nextEventTime: " << nextEventTime << " nextHeartbeatTime: " << nextHeartbeatTime << EV_ENDL;
+
             if (nextEventTime <= nextHeartbeatTime) {
                 // Next event is scheduled before the next heartbeat
-                shouldScheduleHeartbeat = false;
-                if((nextEventTime + 0.05) >= nextHeartbeatTime){
-                    EV_INFO << "SUM: " << (nextEventTime + 0.05) << EV_ENDL;
+
+                // 0.352 is the sum the vector gooseCopyPeriods
+                if((nextEventTime + 0.352) >= nextHeartbeatTime){
                     heartbeatTimes.erase(heartbeatTimes.begin());
                 }
                 EV_INFO << "Heartbeat disabled" << EV_ENDL;
+                shouldScheduleHeartbeat = false;
             }
-
             else{
-                shouldScheduleHeartbeat = true;
                 EV_INFO << "Heartbeat enabled" << EV_ENDL;
+                shouldScheduleHeartbeat = true;
             }
         }
 
         if (scheduleForAbsoluteTime) {
 
+            // Do not create a copy if copy limit is reached or if previous message was heartbeat
+            if (gooseCopiesSent < 4 && !previousWasHeartbeat) {
 
-            if (gooseCopiesSent < 3 && !shouldScheduleHeartbeat) {
-
-                currentCopyDelay += (gooseCopyDelay * (std::pow(2, gooseCopiesSent)));
+                currentCopyDelay += gooseCopyPeriods[gooseCopiesSent];
 
                 if (timeBetweenEvents > currentCopyDelay) {
                     // Schedule a copy if the time since the last event is larger than the current copy delay
-                    clocktime_t copyScheduledTime = pastEventTime + goosePeriods[gooseCopiesSent];
-                    EV_INFO << "Copy scheduled at: " << copyScheduledTime << " with delay from event of: " << goosePeriods[gooseCopiesSent] << EV_ENDL;
+                    clocktime_t copyScheduledTime = pastEventTime + currentCopyDelay;
+                    EV_INFO << "Copy scheduled at: " << copyScheduledTime << " with delay from event of: " << currentCopyDelay << EV_ENDL;
                     gooseCopiesSent++;
                     scheduleClockEventAt(copyScheduledTime, productionTimer);
+                    previousWasHeartbeat = false;
 
                 }
                 else {
@@ -153,13 +154,15 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
                     gooseCopiesSent = 0; //Reset the variables for calculating the use of copied messages
                     currentCopyDelay = 0;
                     EV_INFO << "Event scheduled at: " << nextEventTime << EV_ENDL;
+                    previousWasHeartbeat = false;
                 }
             }
-            else if (shouldScheduleHeartbeat) { //&& shouldScheduleHeartbeat(nextEventTime <= nextHeartbeatTime) && shouldScheduleHeartbeat            && !heartbeatTimes.empty()
+            else if (shouldScheduleHeartbeat){
                 scheduleClockEventAt(nextHeartbeatTime, productionTimer);
                 lastHeartbeatTime = nextHeartbeatTime;
                 heartbeatTimes.erase(heartbeatTimes.begin());
                 EV_INFO << "Heartbeat scheduled at: " << nextHeartbeatTime << EV_ENDL;
+                previousWasHeartbeat = true;
             }
 
             else {
@@ -169,7 +172,8 @@ void ActivePacketSource::scheduleProductionTimer(clocktime_t delay)
                 randomTimes.erase(randomTimes.begin()); // Remove the scheduled event
                 gooseCopiesSent = 0; //Reset the variables for calculating the use of copied messages
                 currentCopyDelay = 0;
-                EV_INFO << "Event scheduled at: " << nextEventTime << " after max copies" << EV_ENDL;
+                EV_INFO << "Event scheduled at: " << nextEventTime << EV_ENDL;
+                previousWasHeartbeat = false;
             }
         }
     }
@@ -198,12 +202,16 @@ void ActivePacketSource::producePacket()
 {
     auto packet = createPacket();
     if(useGoose){
-        if(oldIndex == 0){
-            EV_INFO << simTime().dbl() << " GOOSE Packet Produced" << EV_FIELD(packet) << EV_ENDL;
+        if(heartbeat){
+            EV_INFO << simTime().dbl() << " GOOSE Heartbeat Packet Produced" << EV_FIELD(packet) << EV_ENDL;
+        }
+        else if(oldIndex == 0){
+            EV_INFO << simTime().dbl() << " GOOSE Event Packet Produced" << EV_FIELD(packet) << EV_ENDL;
         }
         else{
-            EV_INFO << simTime().dbl() << " GOOSE Copy Produced " << (oldIndex) << EV_FIELD(packet) << EV_ENDL;
+            EV_INFO << simTime().dbl() << " GOOSE Copy Packet Produced " << (oldIndex) << EV_FIELD(packet) << EV_ENDL;
         }
+        heartbeat = previousWasHeartbeat;
         oldIndex = gooseCopiesSent; //Used to keep track of the previous copied message index since it will be overwritten during scheduling
     }
     else
