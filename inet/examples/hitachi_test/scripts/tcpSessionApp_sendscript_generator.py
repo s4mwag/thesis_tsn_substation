@@ -33,7 +33,7 @@ def configuration_log_traffic():
     simulationStart = 0
     simulationEnd = 10
     bytesPerPacket = 84
-    noOfFiles = 12
+    noOfFiles = 15
     filename = "sendscriptLOG.txt"
 
 def generate_sorted_numbers(noOfPackets, simulationStart, simulationEnd, bytesPerPacket):
