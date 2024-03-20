@@ -10,6 +10,7 @@
 
 #include "inet/common/clock/ClockUserModuleMixin.h"
 #include "inet/queueing/base/ActivePacketSourceBase.h"
+#include <numeric> // For std::accumulate
 
 namespace inet {
 
@@ -34,6 +35,16 @@ class INET_API ActivePacketSource : public ClockUserModuleMixin<ActivePacketSour
     std::vector<clocktime_t> randomTimes; // Member variable to store the sorted random times
     int oldIndex = 0;
     clocktime_t currentCopyDelay = 0;
+    std::vector<clocktime_t> gooseCopyPeriods;
+    clocktime_t sumGoosePeriods;
+
+    clocktime_t nextHeartbeatTime = 0;
+    clocktime_t lastHeartbeatTime = 0;
+    std::vector<clocktime_t> heartbeatTimes;
+    bool shouldScheduleHeartbeat;
+
+    bool previousWasHeartbeat = true;
+    bool heartbeat = true;
 
   protected:
     virtual void initialize(int stage) override;
