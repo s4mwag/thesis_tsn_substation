@@ -30,7 +30,7 @@ class INET_API Gptp : public ClockUserModuleBase, public cListener
     int slavePortId = -1; // interface ID of slave port
     std::set<int> masterPortIds; // interface IDs of master ports
     clocktime_t correctionField;
-    int64_t clockIdentity = 0;
+    uint64_t clockIdentity = 0;
 
     double gmRateRatio = 1.0;
     double receivedRateRatio = 1.0;
@@ -85,9 +85,12 @@ class INET_API Gptp : public ClockUserModuleBase, public cListener
     virtual void handleMessage(cMessage *msg) override;
 
     virtual void handleSelfMessage(cMessage *msg);
+    void handleDelayOrSendFollowUp(const GptpBase *gptp, omnetpp::cComponent *source);
+    const GptpBase *extractGptpHeader(Packet *packet);
 
   public:
     virtual ~Gptp();
+  protected:
     void sendPacketToNIC(Packet *packet, int portId);
 
     void sendSync();
