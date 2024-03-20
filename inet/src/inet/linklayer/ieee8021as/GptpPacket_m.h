@@ -407,7 +407,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, GptpBase& obj) {obj.parsi
 /**
  * Class generated from <tt>inet/linklayer/ieee8021as/GptpPacket.msg:160</tt> by opp_msgtool.
  * <pre>
- * class GptpTlv
+ * class GptpTlv extends cObject
  * {
  *     \@packetData;
  *     GptpTlvType tlvType \@bit(16);
@@ -415,7 +415,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, GptpBase& obj) {obj.parsi
  * }
  * </pre>
  */
-class INET_API GptpTlv
+class INET_API GptpTlv : public ::omnetpp::cObject
 {
   protected:
     GptpTlvType tlvType = static_cast<inet::GptpTlvType>(-1);
@@ -432,8 +432,9 @@ class INET_API GptpTlv
     GptpTlv(const GptpTlv& other);
     virtual ~GptpTlv();
     GptpTlv& operator=(const GptpTlv& other);
-    virtual void parsimPack(omnetpp::cCommBuffer *b) const;
-    virtual void parsimUnpack(omnetpp::cCommBuffer *b);
+    virtual GptpTlv *dup() const override {return new GptpTlv(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
     virtual GptpTlvType getTlvType() const;
     virtual void setTlvType(GptpTlvType tlvType);
@@ -441,6 +442,9 @@ class INET_API GptpTlv
     virtual uint16_t getLengthField() const;
     virtual void setLengthField(uint16_t lengthField);
 };
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const GptpTlv& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, GptpTlv& obj) {obj.parsimUnpack(b);}
 
 /**
  * Class generated from <tt>inet/linklayer/ieee8021as/GptpPacket.msg:174</tt> by opp_msgtool.
@@ -455,7 +459,7 @@ class INET_API GptpTlv
  * class GptpFollowUpInformationTlv extends GptpTlv
  * {
  *     tlvType = GPTP_FOLLOW_UP_INFORMATION_TLV;
- *     uint16_t lengthField \@bit(16) = B(GPTP_FOLLOW_UP_INFORMATION_TLV_BODYSIZE).get();
+ *     lengthField \@bit(16) = B(GPTP_FOLLOW_UP_INFORMATION_TLV_BODYSIZE).get();
  *     uint32_t organizationId \@bit(24) = 0x0080C2;
  *     uint32_t organizationSubType \@bit(24) = 1;
  *     double rateRatio \@bit(32); // 11.4.4.3.6 The value of cumulativeScaledRateOffset is equal to (rateRatio – 1.0) / (2^41), truncated to the next smaller
@@ -479,7 +483,6 @@ class INET_API GptpTlv
 class INET_API GptpFollowUpInformationTlv : public ::inet::GptpTlv
 {
   protected:
-    uint16_t lengthField = B(GPTP_FOLLOW_UP_INFORMATION_TLV_BODYSIZE).get();
     uint32_t organizationId = 0x0080C2;
     uint32_t organizationSubType = 1;
     double rateRatio = 0;
@@ -498,11 +501,9 @@ class INET_API GptpFollowUpInformationTlv : public ::inet::GptpTlv
     GptpFollowUpInformationTlv(const GptpFollowUpInformationTlv& other);
     virtual ~GptpFollowUpInformationTlv();
     GptpFollowUpInformationTlv& operator=(const GptpFollowUpInformationTlv& other);
-    virtual void parsimPack(omnetpp::cCommBuffer *b) const;
-    virtual void parsimUnpack(omnetpp::cCommBuffer *b);
-
-    virtual uint16_t getLengthField() const;
-    virtual void setLengthField(uint16_t lengthField);
+    virtual GptpFollowUpInformationTlv *dup() const override {return new GptpFollowUpInformationTlv(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
     virtual uint32_t getOrganizationId() const;
     virtual void setOrganizationId(uint32_t organizationId);
@@ -526,6 +527,9 @@ class INET_API GptpFollowUpInformationTlv : public ::inet::GptpTlv
     void setCumulativeScaledRateOffset(int32_t x) { setRateRatio(1.0 + (double)(x) / (double)((uint64_t)1<<41)); }
     int32_t getCumulativeScaledRateOffset() const { return (int32_t)ceil((getRateRatio() - 1.0) * (double)((uint64_t)1<<41)); }
 };
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const GptpFollowUpInformationTlv& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, GptpFollowUpInformationTlv& obj) {obj.parsimUnpack(b);}
 
 /**
  * Class generated from <tt>inet/linklayer/ieee8021as/GptpPacket.msg:202</tt> by opp_msgtool.
@@ -789,9 +793,8 @@ inline any_ptr toAnyPtr(const inet::PortIdentity *p) {return any_ptr(p);}
 template<> inline inet::PortIdentity *fromAnyPtr(any_ptr ptr) { return ptr.get<inet::PortIdentity>(); }
 template<> inline inet::GptpReqAnswerEvent *fromAnyPtr(any_ptr ptr) { return check_and_cast<inet::GptpReqAnswerEvent*>(ptr.get<cObject>()); }
 template<> inline inet::GptpBase *fromAnyPtr(any_ptr ptr) { return check_and_cast<inet::GptpBase*>(ptr.get<cObject>()); }
-inline any_ptr toAnyPtr(const inet::GptpTlv *p) {if (auto obj = as_cObject(p)) return any_ptr(obj); else return any_ptr(p);}
-template<> inline inet::GptpTlv *fromAnyPtr(any_ptr ptr) { return ptr.get<inet::GptpTlv>(); }
-template<> inline inet::GptpFollowUpInformationTlv *fromAnyPtr(any_ptr ptr) { return static_cast<inet::GptpFollowUpInformationTlv*>(ptr.get<inet::GptpTlv>()); }
+template<> inline inet::GptpTlv *fromAnyPtr(any_ptr ptr) { return check_and_cast<inet::GptpTlv*>(ptr.get<cObject>()); }
+template<> inline inet::GptpFollowUpInformationTlv *fromAnyPtr(any_ptr ptr) { return check_and_cast<inet::GptpFollowUpInformationTlv*>(ptr.get<cObject>()); }
 template<> inline inet::GptpSync *fromAnyPtr(any_ptr ptr) { return check_and_cast<inet::GptpSync*>(ptr.get<cObject>()); }
 template<> inline inet::GptpFollowUp *fromAnyPtr(any_ptr ptr) { return check_and_cast<inet::GptpFollowUp*>(ptr.get<cObject>()); }
 template<> inline inet::GptpPdelayReq *fromAnyPtr(any_ptr ptr) { return check_and_cast<inet::GptpPdelayReq*>(ptr.get<cObject>()); }

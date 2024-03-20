@@ -48,17 +48,29 @@ network ThreeBaysOverProvisioned extends TsnNetworkBase2
             parameters:
                 @display("p=1038,229");
         }
-        MU_1: TsnDevice {
+        MU_1_A: TsnDevice {
             parameters:
-                @display("p=561,383");
+                @display("p=517.6923,382.3077");
         }
-        MU_2: TsnDevice {
+        MU_1_B: TsnDevice {
             parameters:
-                @display("p=765,548");
+                @display("p=583.8462,382.3077");   
         }
-        MU_3: TsnDevice {
+        MU_2_A: TsnDevice {
             parameters:
-                @display("p=974,383");
+                @display("p=724.6154,547.6923");
+        }
+        MU_2_B: TsnDevice {
+            parameters:
+                @display("p=794.6154,547.6923");
+        }
+        MU_3_A: TsnDevice {
+            parameters:
+                @display("p=944.6154,382.3077");
+        }
+        MU_3_B: TsnDevice {
+            parameters:
+                @display("p=1003.8462,382.3077");
         }
         switch_1: TsnSwitch {
             parameters:
@@ -73,7 +85,7 @@ network ThreeBaysOverProvisioned extends TsnNetworkBase2
                 @display("p=974,300");
         }
         gPTPclock: TsnClock {
-            @display("p=502,382;i=device/clock");
+            @display("p=407.69232,386.9231;i=device/clock");
         }
         log_server: StandardHost {
             @display("p=328,200");
@@ -95,15 +107,18 @@ network ThreeBaysOverProvisioned extends TsnNetworkBase2
         IED_1_A.ethg++ <--> Eth100M <--> switch_1.ethg++;
         IED_1_B.ethg++ <--> Eth100M <--> switch_1.ethg++;
         IED_1_C.ethg++ <--> Eth100M <--> switch_1.ethg++;
-        MU_1.ethg++ <--> Eth100M <--> switch_1.ethg++;
+        MU_1_A.ethg++ <--> Eth100M <--> switch_1.ethg++;
+        MU_1_B.ethg++ <--> Eth100M <--> switch_1.ethg++;
         IED_2_A.ethg++ <--> Eth100M <--> switch_2.ethg++;
         IED_2_B.ethg++ <--> Eth100M <--> switch_2.ethg++;
         IED_2_C.ethg++ <--> Eth100M <--> switch_2.ethg++;
-        MU_2.ethg++ <--> Eth100M <--> switch_2.ethg++;
+        MU_2_A.ethg++ <--> Eth100M <--> switch_2.ethg++;
+        MU_2_B.ethg++ <--> Eth100M <--> switch_2.ethg++;
         IED_3_A.ethg++ <--> Eth100M <--> switch_3.ethg++;
         IED_3_B.ethg++ <--> Eth100M <--> switch_3.ethg++;
         IED_3_C.ethg++ <--> Eth100M <--> switch_3.ethg++;
-        MU_3.ethg++ <--> Eth100M <--> switch_3.ethg++;
+        MU_3_A.ethg++ <--> Eth100M <--> switch_3.ethg++;
+        MU_3_B.ethg++ <--> Eth100M <--> switch_3.ethg++;
         switch_1.ethg++ <--> Eth100M <--> switch_2.ethg++;
         switch_1.ethg++ <--> Eth100M <--> switch_3.ethg++;
         switch_2.ethg++ <--> Eth100M <--> switch_3.ethg++;
@@ -120,66 +135,78 @@ network ThreeBaysUnderProvisioned extends TsnNetworkBase2
     submodules:
         IED_1_A: TsnDevice {
             parameters:
-                @display("p=319,222");
+                @display("p=502,229");
         }
         IED_1_B: TsnDevice {
             parameters:
-                @display("p=378,222");
+                @display("p=561,229");
         }
         IED_1_C: TsnDevice {
             parameters:
-                @display("p=442,222");
+                @display("p=625,229");
         }
         IED_2_A: TsnDevice {
             parameters:
-                @display("p=523,351");
+                @display("p=706,358");
         }
         IED_2_B: TsnDevice {
             parameters:
-                @display("p=582,351");
+                @display("p=765,358");
         }
         IED_2_C: TsnDevice {
             parameters:
-                @display("p=646,351");
+                @display("p=829,358");
         }
         IED_3_A: TsnDevice {
             parameters:
-                @display("p=732,222");
+                @display("p=915,229");
         }
         IED_3_B: TsnDevice {
             parameters:
-                @display("p=791,222");
+                @display("p=974,229");
         }
         IED_3_C: TsnDevice {
             parameters:
-                @display("p=855,222");
+                @display("p=1038,229");
         }
-        MU_1: TsnDevice {
+        MU_1_A: TsnDevice {
             parameters:
-                @display("p=378,376");
+                @display("p=517.6923,382.3077");
         }
-        MU_2: TsnDevice {
+        MU_1_B: TsnDevice {
             parameters:
-                @display("p=582,541");
+                @display("p=583.8462,382.3077");   
         }
-        MU_3: TsnDevice {
+        MU_2_A: TsnDevice {
             parameters:
-                @display("p=791,376");
+                @display("p=724.6154,547.6923");
+        }
+        MU_2_B: TsnDevice {
+            parameters:
+                @display("p=794.6154,547.6923");
+        }
+        MU_3_A: TsnDevice {
+            parameters:
+                @display("p=944.6154,382.3077");
+        }
+        MU_3_B: TsnDevice {
+            parameters:
+                @display("p=1003.8462,382.3077");
         }
         switch_1: TsnSwitch {
             parameters:
-                @display("p=378,293");
+                @display("p=561,300");
         }
         switch_2: TsnSwitch {
             parameters:
-                @display("p=582,475");
+                @display("p=765,482");
         }
         switch_3: TsnSwitch {
             parameters:
-                @display("p=791,293");
+                @display("p=974,300");
         }
         gPTPclock: TsnClock {
-            @display("p=502,382;i=device/clock");
+            @display("p=407.69232,386.9231;i=device/clock");
         }
         log_server: StandardHost {
             @display("p=328,200");
@@ -201,15 +228,18 @@ network ThreeBaysUnderProvisioned extends TsnNetworkBase2
         IED_1_A.ethg++ <--> Eth10M <--> switch_1.ethg++;
         IED_1_B.ethg++ <--> Eth10M <--> switch_1.ethg++;
         IED_1_C.ethg++ <--> Eth10M <--> switch_1.ethg++;
-        MU_1.ethg++ <--> Eth10M <--> switch_1.ethg++;
+        MU_1_A.ethg++ <--> Eth10M <--> switch_1.ethg++;
+        MU_1_B.ethg++ <--> Eth10M <--> switch_1.ethg++;
         IED_2_A.ethg++ <--> Eth10M <--> switch_2.ethg++;
         IED_2_B.ethg++ <--> Eth10M <--> switch_2.ethg++;
         IED_2_C.ethg++ <--> Eth10M <--> switch_2.ethg++;
-        MU_2.ethg++ <--> Eth10M <--> switch_2.ethg++;
+        MU_2_A.ethg++ <--> Eth10M <--> switch_2.ethg++;
+        MU_2_B.ethg++ <--> Eth10M <--> switch_2.ethg++;
         IED_3_A.ethg++ <--> Eth10M <--> switch_3.ethg++;
         IED_3_B.ethg++ <--> Eth10M <--> switch_3.ethg++;
         IED_3_C.ethg++ <--> Eth10M <--> switch_3.ethg++;
-        MU_3.ethg++ <--> Eth10M <--> switch_3.ethg++;
+        MU_3_A.ethg++ <--> Eth10M <--> switch_3.ethg++;
+        MU_3_B.ethg++ <--> Eth10M <--> switch_3.ethg++;
         switch_1.ethg++ <--> Eth10M <--> switch_2.ethg++;
         switch_1.ethg++ <--> Eth10M <--> switch_3.ethg++;
         switch_2.ethg++ <--> Eth10M <--> switch_3.ethg++;

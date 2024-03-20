@@ -1655,11 +1655,13 @@ void GptpBaseDescriptor::setFieldStructValuePointer(omnetpp::any_ptr object, int
     }
 }
 
-GptpTlv::GptpTlv()
+Register_Class(GptpTlv)
+
+GptpTlv::GptpTlv() : ::omnetpp::cObject()
 {
 }
 
-GptpTlv::GptpTlv(const GptpTlv& other)
+GptpTlv::GptpTlv(const GptpTlv& other) : ::omnetpp::cObject(other)
 {
     copy(other);
 }
@@ -1671,6 +1673,7 @@ GptpTlv::~GptpTlv()
 GptpTlv& GptpTlv::operator=(const GptpTlv& other)
 {
     if (this == &other) return *this;
+    ::omnetpp::cObject::operator=(other);
     copy(other);
     return *this;
 }
@@ -1751,7 +1754,7 @@ class GptpTlvDescriptor : public omnetpp::cClassDescriptor
 
 Register_ClassDescriptor(GptpTlvDescriptor)
 
-GptpTlvDescriptor::GptpTlvDescriptor() : omnetpp::cClassDescriptor(omnetpp::opp_typename(typeid(inet::GptpTlv)), "")
+GptpTlvDescriptor::GptpTlvDescriptor() : omnetpp::cClassDescriptor(omnetpp::opp_typename(typeid(inet::GptpTlv)), "omnetpp::cObject")
 {
     propertyNames = nullptr;
 }
@@ -2038,9 +2041,12 @@ void GptpTlvDescriptor::setFieldStructValuePointer(omnetpp::any_ptr object, int 
     }
 }
 
+Register_Class(GptpFollowUpInformationTlv)
+
 GptpFollowUpInformationTlv::GptpFollowUpInformationTlv() : ::inet::GptpTlv()
 {
     this->setTlvType(GPTP_FOLLOW_UP_INFORMATION_TLV);
+    this->setLengthField(B(GPTP_FOLLOW_UP_INFORMATION_TLV_BODYSIZE).get());
 
 }
 
@@ -2063,7 +2069,6 @@ GptpFollowUpInformationTlv& GptpFollowUpInformationTlv::operator=(const GptpFoll
 
 void GptpFollowUpInformationTlv::copy(const GptpFollowUpInformationTlv& other)
 {
-    this->lengthField = other.lengthField;
     this->organizationId = other.organizationId;
     this->organizationSubType = other.organizationSubType;
     this->rateRatio = other.rateRatio;
@@ -2074,8 +2079,7 @@ void GptpFollowUpInformationTlv::copy(const GptpFollowUpInformationTlv& other)
 
 void GptpFollowUpInformationTlv::parsimPack(omnetpp::cCommBuffer *b) const
 {
-    doParsimPacking(b,(::inet::GptpTlv&)*this);
-    doParsimPacking(b,this->lengthField);
+    ::inet::GptpTlv::parsimPack(b);
     doParsimPacking(b,this->organizationId);
     doParsimPacking(b,this->organizationSubType);
     doParsimPacking(b,this->rateRatio);
@@ -2086,24 +2090,13 @@ void GptpFollowUpInformationTlv::parsimPack(omnetpp::cCommBuffer *b) const
 
 void GptpFollowUpInformationTlv::parsimUnpack(omnetpp::cCommBuffer *b)
 {
-    doParsimUnpacking(b,(::inet::GptpTlv&)*this);
-    doParsimUnpacking(b,this->lengthField);
+    ::inet::GptpTlv::parsimUnpack(b);
     doParsimUnpacking(b,this->organizationId);
     doParsimUnpacking(b,this->organizationSubType);
     doParsimUnpacking(b,this->rateRatio);
     doParsimUnpacking(b,this->gmTimeBaseIndicator);
     doParsimUnpacking(b,this->lastGmPhaseChange);
     doParsimUnpacking(b,this->scaledLastGmFreqChange);
-}
-
-uint16_t GptpFollowUpInformationTlv::getLengthField() const
-{
-    return this->lengthField;
-}
-
-void GptpFollowUpInformationTlv::setLengthField(uint16_t lengthField)
-{
-    this->lengthField = lengthField;
 }
 
 uint32_t GptpFollowUpInformationTlv::getOrganizationId() const
@@ -2171,7 +2164,6 @@ class GptpFollowUpInformationTlvDescriptor : public omnetpp::cClassDescriptor
   private:
     mutable const char **propertyNames;
     enum FieldConstants {
-        FIELD_lengthField,
         FIELD_organizationId,
         FIELD_organizationSubType,
         FIELD_rateRatio,
@@ -2244,7 +2236,7 @@ const char *GptpFollowUpInformationTlvDescriptor::getProperty(const char *proper
 int GptpFollowUpInformationTlvDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
-    return base ? 7+base->getFieldCount() : 7;
+    return base ? 6+base->getFieldCount() : 6;
 }
 
 unsigned int GptpFollowUpInformationTlvDescriptor::getFieldTypeFlags(int field) const
@@ -2256,7 +2248,6 @@ unsigned int GptpFollowUpInformationTlvDescriptor::getFieldTypeFlags(int field) 
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        FD_ISEDITABLE,    // FIELD_lengthField
         FD_ISEDITABLE,    // FIELD_organizationId
         FD_ISEDITABLE,    // FIELD_organizationSubType
         FD_ISEDITABLE,    // FIELD_rateRatio
@@ -2264,7 +2255,7 @@ unsigned int GptpFollowUpInformationTlvDescriptor::getFieldTypeFlags(int field) 
         0,    // FIELD_lastGmPhaseChange
         FD_ISEDITABLE,    // FIELD_scaledLastGmFreqChange
     };
-    return (field >= 0 && field < 7) ? fieldTypeFlags[field] : 0;
+    return (field >= 0 && field < 6) ? fieldTypeFlags[field] : 0;
 }
 
 const char *GptpFollowUpInformationTlvDescriptor::getFieldName(int field) const
@@ -2276,7 +2267,6 @@ const char *GptpFollowUpInformationTlvDescriptor::getFieldName(int field) const
         field -= base->getFieldCount();
     }
     static const char *fieldNames[] = {
-        "lengthField",
         "organizationId",
         "organizationSubType",
         "rateRatio",
@@ -2284,20 +2274,19 @@ const char *GptpFollowUpInformationTlvDescriptor::getFieldName(int field) const
         "lastGmPhaseChange",
         "scaledLastGmFreqChange",
     };
-    return (field >= 0 && field < 7) ? fieldNames[field] : nullptr;
+    return (field >= 0 && field < 6) ? fieldNames[field] : nullptr;
 }
 
 int GptpFollowUpInformationTlvDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
     int baseIndex = base ? base->getFieldCount() : 0;
-    if (strcmp(fieldName, "lengthField") == 0) return baseIndex + 0;
-    if (strcmp(fieldName, "organizationId") == 0) return baseIndex + 1;
-    if (strcmp(fieldName, "organizationSubType") == 0) return baseIndex + 2;
-    if (strcmp(fieldName, "rateRatio") == 0) return baseIndex + 3;
-    if (strcmp(fieldName, "gmTimeBaseIndicator") == 0) return baseIndex + 4;
-    if (strcmp(fieldName, "lastGmPhaseChange") == 0) return baseIndex + 5;
-    if (strcmp(fieldName, "scaledLastGmFreqChange") == 0) return baseIndex + 6;
+    if (strcmp(fieldName, "organizationId") == 0) return baseIndex + 0;
+    if (strcmp(fieldName, "organizationSubType") == 0) return baseIndex + 1;
+    if (strcmp(fieldName, "rateRatio") == 0) return baseIndex + 2;
+    if (strcmp(fieldName, "gmTimeBaseIndicator") == 0) return baseIndex + 3;
+    if (strcmp(fieldName, "lastGmPhaseChange") == 0) return baseIndex + 4;
+    if (strcmp(fieldName, "scaledLastGmFreqChange") == 0) return baseIndex + 5;
     return base ? base->findField(fieldName) : -1;
 }
 
@@ -2310,7 +2299,6 @@ const char *GptpFollowUpInformationTlvDescriptor::getFieldTypeString(int field) 
         field -= base->getFieldCount();
     }
     static const char *fieldTypeStrings[] = {
-        "uint16_t",    // FIELD_lengthField
         "uint32_t",    // FIELD_organizationId
         "uint32_t",    // FIELD_organizationSubType
         "double",    // FIELD_rateRatio
@@ -2318,7 +2306,7 @@ const char *GptpFollowUpInformationTlvDescriptor::getFieldTypeString(int field) 
         "inet::clocktime_t",    // FIELD_lastGmPhaseChange
         "int32_t",    // FIELD_scaledLastGmFreqChange
     };
-    return (field >= 0 && field < 7) ? fieldTypeStrings[field] : nullptr;
+    return (field >= 0 && field < 6) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **GptpFollowUpInformationTlvDescriptor::getFieldPropertyNames(int field) const
@@ -2330,10 +2318,6 @@ const char **GptpFollowUpInformationTlvDescriptor::getFieldPropertyNames(int fie
         field -= base->getFieldCount();
     }
     switch (field) {
-        case FIELD_lengthField: {
-            static const char *names[] = { "bit",  nullptr };
-            return names;
-        }
         case FIELD_organizationId: {
             static const char *names[] = { "bit",  nullptr };
             return names;
@@ -2371,9 +2355,6 @@ const char *GptpFollowUpInformationTlvDescriptor::getFieldProperty(int field, co
         field -= base->getFieldCount();
     }
     switch (field) {
-        case FIELD_lengthField:
-            if (!strcmp(propertyName, "bit")) return "16";
-            return nullptr;
         case FIELD_organizationId:
             if (!strcmp(propertyName, "bit")) return "24";
             return nullptr;
@@ -2450,7 +2431,6 @@ std::string GptpFollowUpInformationTlvDescriptor::getFieldValueAsString(omnetpp:
     }
     GptpFollowUpInformationTlv *pp = omnetpp::fromAnyPtr<GptpFollowUpInformationTlv>(object); (void)pp;
     switch (field) {
-        case FIELD_lengthField: return ulong2string(pp->getLengthField());
         case FIELD_organizationId: return ulong2string(pp->getOrganizationId());
         case FIELD_organizationSubType: return ulong2string(pp->getOrganizationSubType());
         case FIELD_rateRatio: return double2string(pp->getRateRatio());
@@ -2473,7 +2453,6 @@ void GptpFollowUpInformationTlvDescriptor::setFieldValueAsString(omnetpp::any_pt
     }
     GptpFollowUpInformationTlv *pp = omnetpp::fromAnyPtr<GptpFollowUpInformationTlv>(object); (void)pp;
     switch (field) {
-        case FIELD_lengthField: pp->setLengthField(string2ulong(value)); break;
         case FIELD_organizationId: pp->setOrganizationId(string2ulong(value)); break;
         case FIELD_organizationSubType: pp->setOrganizationSubType(string2ulong(value)); break;
         case FIELD_rateRatio: pp->setRateRatio(string2double(value)); break;
@@ -2493,7 +2472,6 @@ omnetpp::cValue GptpFollowUpInformationTlvDescriptor::getFieldValue(omnetpp::any
     }
     GptpFollowUpInformationTlv *pp = omnetpp::fromAnyPtr<GptpFollowUpInformationTlv>(object); (void)pp;
     switch (field) {
-        case FIELD_lengthField: return (omnetpp::intval_t)(pp->getLengthField());
         case FIELD_organizationId: return (omnetpp::intval_t)(pp->getOrganizationId());
         case FIELD_organizationSubType: return (omnetpp::intval_t)(pp->getOrganizationSubType());
         case FIELD_rateRatio: return pp->getRateRatio();
@@ -2516,7 +2494,6 @@ void GptpFollowUpInformationTlvDescriptor::setFieldValue(omnetpp::any_ptr object
     }
     GptpFollowUpInformationTlv *pp = omnetpp::fromAnyPtr<GptpFollowUpInformationTlv>(object); (void)pp;
     switch (field) {
-        case FIELD_lengthField: pp->setLengthField(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
         case FIELD_organizationId: pp->setOrganizationId(omnetpp::checked_int_cast<uint32_t>(value.intValue())); break;
         case FIELD_organizationSubType: pp->setOrganizationSubType(omnetpp::checked_int_cast<uint32_t>(value.intValue())); break;
         case FIELD_rateRatio: pp->setRateRatio(value.doubleValue()); break;
@@ -3049,7 +3026,7 @@ unsigned int GptpFollowUpDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         0,    // FIELD_preciseOriginTimestamp
-        FD_ISCOMPOUND,    // FIELD_followUpInformationTLV
+        FD_ISCOMPOUND | FD_ISCOBJECT,    // FIELD_followUpInformationTLV
     };
     return (field >= 0 && field < 2) ? fieldTypeFlags[field] : 0;
 }
@@ -3174,7 +3151,7 @@ std::string GptpFollowUpDescriptor::getFieldValueAsString(omnetpp::any_ptr objec
     GptpFollowUp *pp = omnetpp::fromAnyPtr<GptpFollowUp>(object); (void)pp;
     switch (field) {
         case FIELD_preciseOriginTimestamp: return simtime2string(CLOCKTIME_AS_SIMTIME(pp->getPreciseOriginTimestamp()));
-        case FIELD_followUpInformationTLV: return "";
+        case FIELD_followUpInformationTLV: return pp->getFollowUpInformationTLV().str();
         default: return "";
     }
 }

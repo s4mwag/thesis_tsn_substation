@@ -20,6 +20,8 @@
 #include "inet/networklayer/common/NetworkInterface.h"
 #include "inet/physicallayer/wired/ethernet/EthernetPhyHeader_m.h"
 
+// #define GPTP_ORIG
+
 namespace inet {
 
 Define_Module(Gptp);
@@ -257,25 +259,38 @@ void Gptp::sendSync()
     // The sendFollowUp(portId) called by receiveSignal(), when GptpSync sent
 }
 
-void Gptp::sendFollowUp(int portId, const GptpSync *sync, clocktime_t preciseOriginTimestamp)
+void Gptp::sendFollowUp(int portId, const GptpSync *sync, clocktime_t syncTxEndTimestamp)
 {
     auto packet = new Packet("GptpFollowUp");
     packet->addTag<MacAddressReq>()->setDestAddress(GPTP_MULTICAST_ADDRESS);
     auto gptp = makeShared<GptpFollowUp>();
     gptp->setDomainNumber(domainNumber);
-    gptp->setPreciseOriginTimestamp(preciseOriginTimestamp);
+#ifdef GPTP_ORIG
+    gptp->setPreciseOriginTimestamp(syncTxEndTimestamp);
+#else
+    gptp->setPreciseOriginTimestamp(originTimestamp);
+#endif
     gptp->setSequenceId(sync->getSequenceId());
 
-    if (gptpNodeType == MASTER_NODE)
+    if (gptpNodeType == MASTER_NODE) {
+#ifdef GPTP_ORIG
         gptp->setCorrectionField(CLOCKTIME_ZERO);
+#else
+        gptp->setCorrectionField(syncTxEndTimestamp - originTimestamp);
+#endif
+    }
     else if (gptpNodeType == BRIDGE_NODE)
     {
         /**************** Correction field calculation *********************************************
          * It is calculated by adding peer delay, residence time and packet transmission time      *
          * correctionField(i)=correctionField(i-1)+peerDelay+(timeReceivedSync-timeSentSync)*(1-f) *
          *******************************************************************************************/
-        // gptp->setCorrectionField(correctionField + peerDelay + sentTimeSyncSync - receivedTimeSync);  // TODO revise it!!! see prev. comment, where is the (1-f),  ???
-        gptp->setCorrectionField(CLOCKTIME_ZERO);  // TODO revise it!!! see prev. comment, where is the (1-f),  ???
+#ifdef GPTP_ORIG
+        gptp->setCorrectionField(CLOCKTIME_ZERO);
+#else
+//        gptp->setCorrectionField(correctionField + peerDelay + syncTxEndTimestamp - receivedTimeSync);
+        gptp->setCorrectionField(syncTxEndTimestamp - originTimestamp);
+#endif
     }
     gptp->getFollowUpInformationTLVForUpdate().setRateRatio(gmRateRatio);
     packet->insertAtFront(gptp);
@@ -356,9 +371,13 @@ void Gptp::processFollowUp(Packet *packet, const GptpFollowUp* gptp)
         return;
     }
 
-
-    peerSentTimeSync = gptp->getPreciseOriginTimestamp();
+    originTimestamp = gptp->getPreciseOriginTimestamp();
     correctionField = gptp->getCorrectionField();
+#ifdef GPTP_ORIG
+    peerSentTimeSync = gptp->getPreciseOriginTimestamp();
+#else
+    peerSentTimeSync = gptp->getPreciseOriginTimestamp() + gptp->getCorrectionField();
+#endif
     receivedRateRatio = gptp->getFollowUpInformationTLV().getRateRatio();
 
     synchronize();
@@ -368,6 +387,8 @@ void Gptp::processFollowUp(Packet *packet, const GptpFollowUp* gptp)
     EV_INFO << "ORIGIN TIME SYNC         - " << originTimestamp << endl;
     EV_INFO << "CORRECTION FIELD         - " << correctionField << endl;
     EV_INFO << "PROPAGATION DELAY        - " << peerDelay << endl;
+    EV_INFO << "peerSentTimeSync         - " << peerSentTimeSync << endl;
+    EV_INFO << "receivedRateRatio        - " << receivedRateRatio << endl;
 
     rcvdGptpSync = false;
 }
@@ -384,7 +405,7 @@ void Gptp::synchronize()
      * Local time is adjusted using peer delay, correction field, residence time *
      * and packet transmission time based departure time of Sync message from GM *
      *****************************************************************************/
-    clocktime_t newTime = peerSentTimeSync + peerDelay + correctionField + residenceTime;
+    clocktime_t newTime = originTimestamp + correctionField + peerDelay + residenceTime;
 
     ASSERT(gptpNodeType != MASTER_NODE);
 
@@ -392,13 +413,12 @@ void Gptp::synchronize()
     if (oldPeerSentTimeSync == -1)
         gmRateRatio = 1;
     else
-        gmRateRatio = (peerSentTimeSync - oldPeerSentTimeSync) / (origNow - newLocalTimeAtTimeSync) ;
+        gmRateRatio = (peerSentTimeSync - oldPeerSentTimeSync) / (syncIngressTimestamp - receivedTimeSync);
 
     auto settableClock = check_and_cast<SettableClock *>(clock.get());
     ppm newOscillatorCompensation = unit(gmRateRatio * (1 + unit(settableClock->getOscillatorCompensation()).get()) - 1);
     settableClock->setClockTime(newTime, newOscillatorCompensation, true);
 
-    oldPeerSentTimeSync = peerSentTimeSync;
     oldLocalTimeAtTimeSync = origNow;
     newLocalTimeAtTimeSync = clock->getClockTime();
     receivedTimeSync = syncIngressTimestamp;
@@ -406,20 +426,25 @@ void Gptp::synchronize()
     // adjust local timestamps, too
     pdelayRespEventIngressTimestamp += newLocalTimeAtTimeSync - oldLocalTimeAtTimeSync;
     pdelayReqEventEgressTimestamp += newLocalTimeAtTimeSync - oldLocalTimeAtTimeSync;
+    receivedTimeSync += newLocalTimeAtTimeSync - oldLocalTimeAtTimeSync;
 
     /************** Rate ratio calculation *************************************
      * It is calculated based on interval between two successive Sync messages *
      ***************************************************************************/
 
     EV_INFO << "############## SYNC #####################################"<< endl;
-    EV_INFO << "RECEIVED TIME AFTER SYNC   - " << newLocalTimeAtTimeSync << endl;
-    EV_INFO << "RECEIVED SIM TIME          - " << now << endl;
+    EV_INFO << "LOCAL TIME BEFORE SYNC     - " << oldLocalTimeAtTimeSync << endl;
+    EV_INFO << "LOCAL TIME AFTER SYNC      - " << newLocalTimeAtTimeSync << endl;
+    EV_INFO << "CURRENT SIMTIME            - " << now << endl;
     EV_INFO << "ORIGIN TIME SYNC           - " << peerSentTimeSync << endl;
+    EV_INFO << "PREV ORIGIN TIME SYNC      - " << oldPeerSentTimeSync << endl;
     EV_INFO << "RESIDENCE TIME             - " << residenceTime << endl;
     EV_INFO << "CORRECTION FIELD           - " << correctionField << endl;
     EV_INFO << "PROPAGATION DELAY          - " << peerDelay << endl;
     EV_INFO << "TIME DIFFERENCE TO SIMTIME - " << CLOCKTIME_AS_SIMTIME(newLocalTimeAtTimeSync) - now << endl;
-    EV_INFO << "RATE RATIO                 - " << gmRateRatio << endl;
+    EV_INFO << "GM RATE RATIO              - " << gmRateRatio << endl;
+
+    oldPeerSentTimeSync = peerSentTimeSync;
 
     emit(rateRatioSignal, gmRateRatio);
     emit(localTimeSignal, CLOCKTIME_AS_SIMTIME(newLocalTimeAtTimeSync));
@@ -486,62 +511,68 @@ void Gptp::processPdelayRespFollowUp(Packet *packet, const GptpPdelayRespFollowU
     emit(peerDelaySignal, CLOCKTIME_AS_SIMTIME(peerDelay));
 }
 
-void Gptp::receiveSignal(cComponent *source, simsignal_t signal, cObject *obj, cObject *details)
+const GptpBase *Gptp::extractGptpHeader(Packet *packet)
 {
-    Enter_Method("%s", cComponent::getSignalName(signal));
+    auto protocol = packet->getTag<PacketProtocolTag>()->getProtocol();
+    if (*protocol != Protocol::ethernetPhy)
+        return nullptr;
 
-    if (signal == receptionEndedSignal) {
-        auto signal = check_and_cast<cPacket *>(obj);
-        auto packet = check_and_cast_nullable<Packet *>(signal->getEncapsulatedPacket());
-        if (packet) {
-            auto protocol = packet->getTag<PacketProtocolTag>()->getProtocol();
-            if (*protocol == Protocol::ethernetPhy) {
-                const auto& ethPhyHeader = packet->peekAtFront<physicallayer::EthernetPhyHeader>();
-                const auto& ethMacHeader = packet->peekAt<EthernetMacHeader>(ethPhyHeader->getChunkLength());
-                if (ethMacHeader->getTypeOrLength() == ETHERTYPE_GPTP) {
-                    const auto& gptp = packet->peekAt<GptpBase>(ethPhyHeader->getChunkLength() + ethMacHeader->getChunkLength());
-                    if (gptp->getDomainNumber() == domainNumber)
-                        packet->addTagIfAbsent<GptpIngressTimeInd>()->setArrivalClockTime(clock->getClockTime());
-                }
-            }
-        }
-    }
-    else if (signal == transmissionEndedSignal) {
-        auto signal = check_and_cast<cPacket *>(obj);
-        auto packet = check_and_cast_nullable<Packet *>(signal->getEncapsulatedPacket());
-        if (packet) {
-            auto protocol = packet->getTag<PacketProtocolTag>()->getProtocol();
-            if (*protocol == Protocol::ethernetPhy) {
-                const auto& ethPhyHeader = packet->peekAtFront<physicallayer::EthernetPhyHeader>();
-                const auto& ethMacHeader = packet->peekAt<EthernetMacHeader>(ethPhyHeader->getChunkLength());
-                if (ethMacHeader->getTypeOrLength() == ETHERTYPE_GPTP) {
-                    const auto& gptp = packet->peekAt<GptpBase>(ethPhyHeader->getChunkLength() + ethMacHeader->getChunkLength());
-                    if (gptp->getDomainNumber() == domainNumber) {
-                        int portId = getContainingNicModule(check_and_cast<cModule*>(source))->getInterfaceId();
-                        switch (gptp->getMessageType()) {
-                            case GPTPTYPE_PDELAY_RESP: {
-                                auto gptpResp = dynamicPtrCast<const GptpPdelayResp>(gptp);
-                                sendPdelayRespFollowUp(portId, gptpResp.get());
-                                break;
-                            }
-                            case GPTPTYPE_SYNC: {
-                                auto gptpSync = dynamicPtrCast<const GptpSync>(gptp);
-                                sendFollowUp(portId, gptpSync.get(), clock->getClockTime());
-                                break;
-                            }
-                            case GPTPTYPE_PDELAY_REQ:
-                                if (portId == slavePortId)
-                                    pdelayReqEventEgressTimestamp = clock->getClockTime();
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
-            }
-        }
-    }
+    const auto& ethPhyHeader = packet->peekAtFront<physicallayer::EthernetPhyHeader>();
+    const auto& ethMacHeader = packet->peekDataAt<EthernetMacHeader>(ethPhyHeader->getChunkLength());
+    if (ethMacHeader->getTypeOrLength() != ETHERTYPE_GPTP)
+        return nullptr;
+
+    b offset = ethPhyHeader->getChunkLength() + ethMacHeader->getChunkLength();
+    return packet->peekDataAt<GptpBase>(offset).get();
 }
 
+void Gptp::receiveSignal(cComponent *source, simsignal_t simSignal, cObject *obj, cObject *details)
+{
+    Enter_Method("%s", cComponent::getSignalName(simSignal));
+
+    if (simSignal != receptionEndedSignal && simSignal != transmissionEndedSignal)
+        return;
+
+    auto ethernetSignal = check_and_cast<cPacket *>(obj);
+    auto packet = check_and_cast_nullable<Packet *>(ethernetSignal->getEncapsulatedPacket());
+    if (!packet)
+        return;
+
+    auto gptp = extractGptpHeader(packet);
+    if (!gptp)
+        return;
+
+    if (gptp->getDomainNumber() != domainNumber)
+        return;
+
+    if (simSignal == receptionEndedSignal)
+        packet->addTagIfAbsent<GptpIngressTimeInd>()->setArrivalClockTime(clock->getClockTime());
+    else if (simSignal == transmissionEndedSignal)
+        handleDelayOrSendFollowUp(gptp, source);
+}
+
+void Gptp::handleDelayOrSendFollowUp(const GptpBase *gptp, cComponent *source)
+{
+    int portId = getContainingNicModule(check_and_cast<cModule*>(source))->getInterfaceId();
+
+    switch (gptp->getMessageType()) {
+    case GPTPTYPE_PDELAY_RESP: {
+        auto gptpResp = check_and_cast<const GptpPdelayResp*>(gptp);
+        sendPdelayRespFollowUp(portId, gptpResp);
+        break;
+    }
+    case GPTPTYPE_SYNC: {
+        auto gptpSync = check_and_cast<const GptpSync*>(gptp);
+        sendFollowUp(portId, gptpSync, clock->getClockTime());
+        break;
+    }
+    case GPTPTYPE_PDELAY_REQ:
+        if (portId == slavePortId)
+            pdelayReqEventEgressTimestamp = clock->getClockTime();
+        break;
+    default:
+        break;
+    }
+}
 }
 
