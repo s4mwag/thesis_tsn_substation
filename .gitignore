@@ -11,6 +11,6 @@
 !*.ini
 !*.anf
 !*.py
-!*send*.txt
+!*.txt
 !*run*simulation*.sh
 /.metadata/
