@@ -12,5 +12,6 @@
 !*.anf
 !*.py
 !*.txt
+!*.csv
 !*run*simulation*.sh
 /.metadata/
