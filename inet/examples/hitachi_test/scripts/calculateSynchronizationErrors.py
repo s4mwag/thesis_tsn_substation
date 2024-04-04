@@ -11,19 +11,18 @@ def process_csv(file_path, result_file_path):
     df = pd.read_csv(file_path)
     
     for i in range(1, len(df.columns), 2):
-        df.iloc[0:, i] = (df.iloc[0:, i] - df.iloc[2:, i - 1]) * 1000000
-        current_min_value = df.iloc[0:, i].min()
-        current_max_value = df.iloc[0:, i].max()
-        min_value = min(current_min_value, min_value)
+        df.iloc[0:, i] = (df.iloc[0:, i] - df.iloc[0:, i - 1]) * 1000000
+        absolute = df.iloc[0:, i].abs()
+        current_max_value = absolute.max()
         max_value = max(current_max_value, max_value)
-        total_sum += df.iloc[0:, i].sum()
-        count += len(df.iloc[0:, i].dropna())
+        total_sum += absolute.sum()
+        count += len(absolute.dropna())
 
     average_value = total_sum / count if count != 0 else 0
 
     stats_df = pd.DataFrame({
-        'Statistic': ['Min', 'Max', 'Average'],
-        'Value': [min_value, max_value, average_value]
+        'Statistic': ['Max', 'Average'],
+        'Value': [max_value, average_value]
     })
 
     stats_df.to_csv(result_file_path, index=False)
