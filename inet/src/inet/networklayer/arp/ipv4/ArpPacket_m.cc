@@ -351,7 +351,7 @@ unsigned int ArpPacketDescriptor::getFieldTypeFlags(int field) const
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        0,    // FIELD_opcode
+        FD_ISEDITABLE,    // FIELD_opcode
         0,    // FIELD_srcMacAddress
         0,    // FIELD_destMacAddress
         0,    // FIELD_srcIpAddress
@@ -516,6 +516,7 @@ void ArpPacketDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int fie
     }
     ArpPacket *pp = omnetpp::fromAnyPtr<ArpPacket>(object); (void)pp;
     switch (field) {
+        case FIELD_opcode: pp->setOpcode((inet::ArpOpcode)string2enum(value, "inet::ArpOpcode")); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'ArpPacket'", field);
     }
 }
@@ -551,6 +552,7 @@ void ArpPacketDescriptor::setFieldValue(omnetpp::any_ptr object, int field, int 
     }
     ArpPacket *pp = omnetpp::fromAnyPtr<ArpPacket>(object); (void)pp;
     switch (field) {
+        case FIELD_opcode: pp->setOpcode(static_cast<inet::ArpOpcode>(value.intValue())); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'ArpPacket'", field);
     }
 }

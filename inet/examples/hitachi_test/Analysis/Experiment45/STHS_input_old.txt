@@ -1,0 +1,259 @@
+message
+length = 140
+period = 250
+deadline = 250
+linkNbr = 4
+link = 15
+link = 10
+link = 12
+link = 14
+initOffset = 0
+
+message
+length = 140
+period = 250
+deadline = 250
+linkNbr = 4
+link = 17
+link = 10
+link = 12
+link = 14 
+initOffset = 0
+
+message
+length = 140
+period = 250
+deadline = 250
+linkNbr = 4
+link = 29
+link = 24
+link = 26
+link = 28
+initOffset = 0
+
+message
+length = 140
+period = 250
+deadline = 250
+linkNbr = 4
+link = 31
+link = 24
+link = 26
+link = 28
+initOffset = 0
+
+message
+length = 140
+period = 250
+deadline = 250
+linkNbr = 4
+link = 41
+link = 36
+link = 38
+link = 40
+initOffset = 0
+
+message
+length = 140
+period = 250
+deadline = 250
+linkNbr = 4
+link = 43
+link = 36
+link = 38
+link = 40
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 9
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 11
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 13
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 15
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 17
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 23
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 25
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 27
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 29
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 31
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 35
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 37
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 39
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 41
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 43
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 8
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 19
+initOffset = 0
+
+message
+length = 80
+period = 1000000
+deadline = 1000000
+linkNbr = 1
+link = 21
+initOffset = 0
+
+message
+length = 72
+period = 31250
+deadline = 31250
+linkNbr = 18
+link = 7
+link = 10
+link = 12
+link = 14
+link = 16
+link = 18
+link = 20
+link = 22
+link = 24
+link = 26
+link = 28
+link = 30
+link = 32
+link = 36
+link = 38
+link = 40
+link = 42
+link = 44
+initOffset = 0
+
+message
+length = 102
+period = 31250
+deadline = 31250
+linkNbr = 18
+link = 7
+link = 10
+link = 12
+link = 14
+link = 16
+link = 18
+link = 20
+link = 22
+link = 24
+link = 26
+link = 28
+link = 30
+link = 32
+link = 36
+link = 38
+link = 40
+link = 42
+link = 44
+initOffset = 0

@@ -11,7 +11,8 @@ seed_value = int(sys.argv[1]) * 100
 
 def configuration_mms_traffic():
     global noOfPackets, simulationStart, simulationEnd, bytesPerPacket, noOfFiles, filename
-    noOfPackets = 8333
+    noOfPackets = 8333*100 # high load
+    #noOfPackets = 833*10 # low load
     simulationStart = 0
     simulationEnd = 10
     bytesPerPacket = 84
@@ -20,7 +21,8 @@ def configuration_mms_traffic():
 
 def configuration_it_traffic():
     global noOfPackets, simulationStart, simulationEnd, bytesPerPacket, noOfFiles, filename
-    noOfPackets = 833
+    noOfPackets = 50500 #high load
+    #noOfPackets = 83*10 #low load
     simulationStart = 0
     simulationEnd = 10
     bytesPerPacket = 1434
@@ -29,7 +31,8 @@ def configuration_it_traffic():
 
 def configuration_log_traffic():
     global noOfPackets, simulationStart, simulationEnd, bytesPerPacket, noOfFiles, filename
-    noOfPackets = 50
+    noOfPackets = 10000 #high load
+    #noOfPackets = 5 * 10 #low load
     simulationStart = 0
     simulationEnd = 10
     bytesPerPacket = 84

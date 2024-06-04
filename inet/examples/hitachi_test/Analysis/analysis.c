@@ -1,4 +1,3 @@
-
 #include "analysis.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -88,56 +87,58 @@ int addMessage_industry(char* exp_ID) {
 	int message_ID = -1;
 	int link_ID = 0;
 	int offset_ID = 0;
-
-	while (fgets(str, 100, fp) != NULL)
+	printf("1: Starting loop\n");
+	while (fgets(str, 500, fp) != NULL)
 		if (compareStrings(str, "message")) {
 			message_ID++;
 			EthMsgList[message_ID].ID = message_ID;
-			printf("\nEthMsgList[%i].ID = %lld;\n", message_ID, EthMsgList[message_ID].ID);
+			//printf("\nEthMsgList[%i].ID = %lld;\n", message_ID, EthMsgList[message_ID].ID);
 			link_ID = 0;
 			offset_ID = 0;
 		}
 		else if (compareStrings(str, "length")) {
 			EthMsgList[message_ID].lengthInBytes = getParameter(str);
-			printf("EthMsgList[%i].lengthInBytes = %lld;\n", message_ID, EthMsgList[message_ID].lengthInBytes);
+			//printf("EthMsgList[%i].lengthInBytes = %lld;\n", message_ID, EthMsgList[message_ID].lengthInBytes);
 		}
 		else if (compareStrings(str, "period")) {
 			EthMsgList[message_ID].period = getParameter(str) * 1000000;
-			printf("EthMsgList[%i].period = %lld;\n", message_ID, EthMsgList[message_ID].period);
+			//printf("EthMsgList[%i].period = %lld;\n", message_ID, EthMsgList[message_ID].period);
 		}
 		else if (compareStrings(str, "deadline")) {
 			EthMsgList[message_ID].deadline = getParameter(str) * 1000000;
-			printf("EthMsgList[%i].deadline = %lld;\n", message_ID, EthMsgList[message_ID].deadline);
+			//printf("EthMsgList[%i].deadline = %lld;\n", message_ID, EthMsgList[message_ID].deadline);
 		}
 		else if (compareStrings(str, "priority")) {
 			EthMsgList[message_ID].priority = getClass(str);
-			printf("EthMsgList[%i].priority = %d;\n", message_ID, (int)EthMsgList[message_ID].priority);
+			//printf("EthMsgList[%i].priority = %d;\n", message_ID, (int)EthMsgList[message_ID].priority);
 		}
 		else if (compareStrings(str, "linkNbr")) {
 			EthMsgList[message_ID].linkNbr = getParameter(str);
-			printf("EthMsgList[%i].linkNbr = %lld;\n", message_ID, EthMsgList[message_ID].linkNbr);
+			//printf("EthMsgList[%i].linkNbr = %lld;\n", message_ID, EthMsgList[message_ID].linkNbr);
 		}
 		else if (compareStrings(str, "link")) {
 			EthMsgList[message_ID].link[link_ID] = getParameter(str);
-			printf("EthMsgList[%i].link[%i] = %lld;\n", message_ID, link_ID, EthMsgList[message_ID].link[link_ID]);
+			//printf("EthMsgList[%i].link[%i] = %lld;\n", message_ID, link_ID, EthMsgList[message_ID].link[link_ID]);
 			link_ID++;
 		}
 		else if (compareStrings(str, "jitterIn")) {
 			EthMsgList[message_ID].jitterIn = getParameter(str) * 1000000;
-			printf("EthMsgList[%i].jitterIn = %lld;\n", message_ID, EthMsgList[message_ID].jitterIn);
+			//printf("EthMsgList[%i].jitterIn = %lld;\n", message_ID, EthMsgList[message_ID].jitterIn);
 		}
 		else if (compareStrings(str, "initOffset")) {
 			EthMsgList[message_ID].initOffset = getParameter(str) * 1000000;
-			printf("EthMsgList[%i].initOffset = %lld;\n", message_ID, EthMsgList[message_ID].initOffset);
+			//printf("EthMsgList[%i].initOffset = %lld;\n", message_ID, EthMsgList[message_ID].initOffset);
 		}
 		else if (compareStrings(str, "offset") && offset_ID < EthMsgList[message_ID].linkNbr) {
 			EthMsgList[message_ID].offset[offset_ID] = getParameter(str) * 1000000;
-			printf("EthMsgList[%i].offset[%i] = %lld;\n", message_ID, offset_ID, EthMsgList[message_ID].offset[offset_ID]);
+			//printf("EthMsgList[%i].offset[%i] = %lld;\n", message_ID, offset_ID, EthMsgList[message_ID].offset[offset_ID]);
 			offset_ID++;
 		}
+	printf("1: Loop finished\n");
 	fclose(fp);
-
+	printf("1: Close file\n");
 	message_ID++;
+	printf("MessageID: %d\n", message_ID);
 
 	return message_ID;
 }
@@ -147,9 +148,28 @@ int addMessage_industry(char* exp_ID) {
 void addIdleSlope_industry(int num_messages) {
 
 	for (int i = 0; i < maxLink; i++) {
-		linkIdleSlope[i].alphaP_A = 0.5;
-		linkIdleSlope[i].alphaP_B = 0.5;
+		linkIdleSlope[i].alphaP_A = 0;
+		linkIdleSlope[i].alphaP_B = 0;
 	}
+
+	linkIdleSlope[16].alphaP_A = 0.496;
+	linkIdleSlope[16].alphaP_B = 0.496;
+
+	linkIdleSlope[18].alphaP_A = 0.496;
+	linkIdleSlope[18].alphaP_B = 0.496;
+
+	linkIdleSlope[30].alphaP_A = 0.496;
+	linkIdleSlope[30].alphaP_B = 0.496;
+
+	linkIdleSlope[32].alphaP_A = 0.496;
+	linkIdleSlope[32].alphaP_B = 0.496;
+	
+	linkIdleSlope[42].alphaP_A = 0.496;
+	linkIdleSlope[42].alphaP_B = 0.496;
+
+	linkIdleSlope[44].alphaP_A = 0.496;
+	linkIdleSlope[44].alphaP_B = 0.496;
+
 
 	/*
 	for (int i = 0; i < maxLink; i++) {
@@ -231,6 +251,19 @@ time_type LCMcalc(time_type v1, time_type v2) {
 
 	lcm = (v1 / n1) * v2;
 	return lcm;
+}
+
+// check if message m share link l with message i
+int checkSharedLink(long int l, long int i)
+{
+	int x;
+
+	for (x = 0; x < EthMsgList[i].linkNbr; x++) {
+		if (EthMsgList[i].link[x] == l) {
+			return 1;
+		}
+	}
+	return -1;
 }
 
 // define cycle of the ST class per link, the member is the link ID
@@ -374,20 +407,6 @@ void extractTransTime_industrycase() {
 			}
 		}
 	}
-}
-
-
-// check if message m share link l with message i
-int checkSharedLink(long int l, long int i)
-{
-	int x;
-
-	for (x = 0; x < EthMsgList[i].linkNbr; x++) {
-		if (EthMsgList[i].link[x] == l) {
-			return 1;
-		}
-	}
-	return -1;
 }
 
 // find the blocking term for Class B
@@ -1065,20 +1084,21 @@ void Print_resoult(char* exp_ID, int num_messages) {
 
 	FILE* fp;
 	char filename[100];
-
+	printf("Printing to file...\n");
 	//strcpy(filename, "C:\\Users\\dmu01\\Desktop\\test\\");
 	strcpy(filename, ".\\Experiment");
 	strcat(filename, exp_ID);
 	strcat(filename, "\\");
 	strcat(filename, "final_results.txt");
 
-	fp = fopen(filename, "a");
+	fp = fopen(filename, "w");
 
 	for (int i = 0; i < num_messages; i++) {
 		
 		if (EthMsgList[i].priority == ClassA || EthMsgList[i].priority == ClassB) {
 
 			fprintf(fp, "%i;%i;%lli;%lli;\n", (int)EthMsgList[i].ID, (int)EthMsgList[i].priority, EthMsgList[i].deadline, EthMsgList[i].responseTime);
+			printf("%i;%i;%lli;%lli;\n", (int)EthMsgList[i].ID, (int)EthMsgList[i].priority, EthMsgList[i].deadline, EthMsgList[i].responseTime);
 
 		}
 		
@@ -1098,27 +1118,39 @@ void Jitter_Output_Calculation(int num_messages) {
 void main(int argc, char** argv)
 {
 	EthMsgList = (EthrMsgType*)calloc(MaxEthernetMessage, sizeof(EthrMsgType));
+	if (EthMsgList == NULL) {
+        printf("Memory allocation failed...");
+        exit(EXIT_FAILURE);
+    }
+	//EthrMsgType EthMsgList[131251];
 	int num_messages;
 	int exp_ID;
 	//addMessage();
 	//addIdleSlope();
 	exp_ID = atoi(argv[1]);
+	printf("1\n");
 	num_messages = addMessage_industry(argv[1]);
 	NumberOfMSGs_Eth = num_messages;
-	
+	printf("2\n");
 	addIdleSlope_industry(num_messages);
+	printf("3\n");
 	initialize();
+	printf("4\n");
 	//defragmentation();
 	//defragmentation_industrycase();
 	extractTransTime();
+	printf("5\n");
 	//extractTransTime_industrycase();
 	cycleLink();
+	printf("6\n");
 	//findSToffsets();//offset calculations
 	findInstances();
-	
+	printf("7\n");
 	Compute_RT_AVB_Msg();
-
+	printf("8\n");
 	//Jitter_Output_Calculation(num_messages);
 
+	printf("num_messages: %d\n", num_messages);
 	Print_resoult(argv[1], num_messages);
+	printf("9");
 }

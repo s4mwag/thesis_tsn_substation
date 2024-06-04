@@ -5,10 +5,12 @@
 
 #define maxLink				100		// maximum links in the network
 #define frameMAC			42		// number of bytes for the Ethernet frame overhead
-#define MaxEthernetMessage	30000	// maximum number of messages in Ethernet
+#define MaxEthernetMessage	131300	// maximum number of messages in Ethernet
 #define switchFabric		10000000//switch fabric delay is set to 10 microseconds, showing in ps
 #define maxFrag				50		//maximum fragmentation value
 #define Maxinst				50		//maximum number of instances for ST message
+
+//131251
 
 typedef long long int	time_type;
 

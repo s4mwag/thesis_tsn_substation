@@ -612,7 +612,7 @@ unsigned int Ieee80211PrimConfirmDescriptor::getFieldTypeFlags(int field) const
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        0,    // FIELD_resultCode
+        FD_ISEDITABLE,    // FIELD_resultCode
     };
     return (field >= 0 && field < 1) ? fieldTypeFlags[field] : 0;
 }
@@ -757,6 +757,7 @@ void Ieee80211PrimConfirmDescriptor::setFieldValueAsString(omnetpp::any_ptr obje
     }
     Ieee80211PrimConfirm *pp = omnetpp::fromAnyPtr<Ieee80211PrimConfirm>(object); (void)pp;
     switch (field) {
+        case FIELD_resultCode: pp->setResultCode((inet::ieee80211::Ieee80211PrimResultCode)string2enum(value, "inet::ieee80211::Ieee80211PrimResultCode")); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'Ieee80211PrimConfirm'", field);
     }
 }
@@ -788,6 +789,7 @@ void Ieee80211PrimConfirmDescriptor::setFieldValue(omnetpp::any_ptr object, int 
     }
     Ieee80211PrimConfirm *pp = omnetpp::fromAnyPtr<Ieee80211PrimConfirm>(object); (void)pp;
     switch (field) {
+        case FIELD_resultCode: pp->setResultCode(static_cast<inet::ieee80211::Ieee80211PrimResultCode>(value.intValue())); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'Ieee80211PrimConfirm'", field);
     }
 }
@@ -1137,7 +1139,7 @@ unsigned int Ieee80211Prim_ScanRequestDescriptor::getFieldTypeFlags(int field) c
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        0,    // FIELD_BSSType
+        FD_ISEDITABLE,    // FIELD_BSSType
         0,    // FIELD_BSSID
         FD_ISEDITABLE,    // FIELD_SSID
         FD_ISEDITABLE,    // FIELD_activeScan
@@ -1319,6 +1321,7 @@ void Ieee80211Prim_ScanRequestDescriptor::setFieldValueAsString(omnetpp::any_ptr
     }
     Ieee80211Prim_ScanRequest *pp = omnetpp::fromAnyPtr<Ieee80211Prim_ScanRequest>(object); (void)pp;
     switch (field) {
+        case FIELD_BSSType: pp->setBSSType((inet::ieee80211::Ieee80211BssType)string2enum(value, "inet::ieee80211::Ieee80211BssType")); break;
         case FIELD_SSID: pp->setSSID((value)); break;
         case FIELD_activeScan: pp->setActiveScan(string2bool(value)); break;
         case FIELD_probeDelay: pp->setProbeDelay(string2simtime(value)); break;
@@ -1363,6 +1366,7 @@ void Ieee80211Prim_ScanRequestDescriptor::setFieldValue(omnetpp::any_ptr object,
     }
     Ieee80211Prim_ScanRequest *pp = omnetpp::fromAnyPtr<Ieee80211Prim_ScanRequest>(object); (void)pp;
     switch (field) {
+        case FIELD_BSSType: pp->setBSSType(static_cast<inet::ieee80211::Ieee80211BssType>(value.intValue())); break;
         case FIELD_SSID: pp->setSSID(value.stringValue()); break;
         case FIELD_activeScan: pp->setActiveScan(value.boolValue()); break;
         case FIELD_probeDelay: pp->setProbeDelay(value.doubleValue()); break;

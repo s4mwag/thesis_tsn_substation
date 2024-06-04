@@ -1,0 +1,143 @@
+message
+length = 1600
+period = 50000
+deadline = 50000
+priority = ClassA
+linkNbr = 3
+link = 9
+link = 16
+link = 18
+jitterIn = 0
+initOffset = 0
+
+message
+length = 1600
+period = 50000
+deadline = 50000
+priority = ClassA
+linkNbr = 3
+link = 11
+link = 16
+link = 18
+jitterIn = 0
+initOffset = 0
+
+message
+length = 1600
+period = 50000
+deadline = 50000
+priority = ClassB
+linkNbr = 3
+link = 11
+link = 16
+link = 18
+jitterIn = 0
+initOffset = 0
+
+message
+length = 1600
+period = 50000
+deadline = 50000
+priority = ClassB
+linkNbr = 3
+link = 13
+link = 16
+link = 18
+jitterIn = 0
+initOffset = 0
+
+message
+length = 1600
+period = 50000
+deadline = 50000
+priority = ClassA
+linkNbr = 3
+link = 23
+link = 30
+link = 32
+jitterIn = 0
+initOffset = 0
+
+message
+length = 1600
+period = 50000
+deadline = 50000
+priority = ClassA
+linkNbr = 3
+link = 25
+link = 30
+link = 32
+jitterIn = 0
+initOffset = 0
+
+message
+length = 1600
+period = 50000
+deadline = 50000
+priority = ClassB
+linkNbr = 3
+link = 25
+link = 30
+link = 32
+jitterIn = 0
+initOffset = 0
+
+message
+length = 1600
+period = 50000
+deadline = 50000
+priority = ClassB
+linkNbr = 3
+link = 27
+link = 30
+link = 32
+jitterIn = 0
+initOffset = 0
+
+message
+length = 1600
+period = 50000
+deadline = 50000
+priority = ClassA
+linkNbr = 3
+link = 35
+link = 42
+link = 44
+jitterIn = 0
+initOffset = 0
+
+message
+length = 1600
+period = 50000
+deadline = 50000
+priority = ClassA
+linkNbr = 3
+link = 37
+link = 42
+link = 44
+jitterIn = 0
+initOffset = 0
+
+message
+length = 1600
+period = 50000
+deadline = 50000
+priority = ClassB
+linkNbr = 3
+link = 37
+link = 42
+link = 44
+jitterIn = 0
+initOffset = 0
+
+message
+length = 1600
+period = 50000
+deadline = 50000
+priority = ClassB
+linkNbr = 3
+link = 39
+link = 42
+link = 44
+jitterIn = 0
+initOffset = 0

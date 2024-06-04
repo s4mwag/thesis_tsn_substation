@@ -314,7 +314,7 @@ unsigned int Ieee80211MacTrailerDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,    // FIELD_fcs
-        FD_ISEDITABLE,    // FIELD_fcsMode
+        0,    // FIELD_fcsMode
     };
     return (field >= 0 && field < 2) ? fieldTypeFlags[field] : 0;
 }
@@ -464,7 +464,6 @@ void Ieee80211MacTrailerDescriptor::setFieldValueAsString(omnetpp::any_ptr objec
     Ieee80211MacTrailer *pp = omnetpp::fromAnyPtr<Ieee80211MacTrailer>(object); (void)pp;
     switch (field) {
         case FIELD_fcs: pp->setFcs(string2ulong(value)); break;
-        case FIELD_fcsMode: pp->setFcsMode((inet::FcsMode)string2enum(value, "inet::FcsMode")); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'Ieee80211MacTrailer'", field);
     }
 }
@@ -498,7 +497,6 @@ void Ieee80211MacTrailerDescriptor::setFieldValue(omnetpp::any_ptr object, int f
     Ieee80211MacTrailer *pp = omnetpp::fromAnyPtr<Ieee80211MacTrailer>(object); (void)pp;
     switch (field) {
         case FIELD_fcs: pp->setFcs(omnetpp::checked_int_cast<uint32_t>(value.intValue())); break;
-        case FIELD_fcsMode: pp->setFcsMode(static_cast<inet::FcsMode>(value.intValue())); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'Ieee80211MacTrailer'", field);
     }
 }

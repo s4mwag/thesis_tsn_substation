@@ -332,7 +332,7 @@ unsigned int ClockEventDescriptor::getFieldTypeFlags(int field) const
         FD_ISCOMPOUND | FD_ISPOINTER | FD_ISREPLACEABLE,    // FIELD_clock
         FD_ISEDITABLE,    // FIELD_relative
         0,    // FIELD_arrivalClockTime
-        0,    // FIELD_overdueClockEventHandlingMode
+        FD_ISEDITABLE,    // FIELD_overdueClockEventHandlingMode
     };
     return (field >= 0 && field < 4) ? fieldTypeFlags[field] : 0;
 }
@@ -491,6 +491,7 @@ void ClockEventDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int fi
     ClockEvent_Base *pp = omnetpp::fromAnyPtr<ClockEvent_Base>(object); (void)pp;
     switch (field) {
         case FIELD_relative: pp->setRelative(string2bool(value)); break;
+        case FIELD_overdueClockEventHandlingMode: pp->setOverdueClockEventHandlingMode((inet::OverdueClockEventHandlingMode)string2enum(value, "inet::OverdueClockEventHandlingMode")); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'ClockEvent_Base'", field);
     }
 }
@@ -527,6 +528,7 @@ void ClockEventDescriptor::setFieldValue(omnetpp::any_ptr object, int field, int
     switch (field) {
         case FIELD_clock: pp->setClock(omnetpp::fromAnyPtr<IClock>(value.pointerValue())); break;
         case FIELD_relative: pp->setRelative(value.boolValue()); break;
+        case FIELD_overdueClockEventHandlingMode: pp->setOverdueClockEventHandlingMode(static_cast<inet::OverdueClockEventHandlingMode>(value.intValue())); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'ClockEvent_Base'", field);
     }
 }

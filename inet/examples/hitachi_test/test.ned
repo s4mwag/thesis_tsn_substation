@@ -8,7 +8,7 @@ import inet.node.ethernet.Eth100M;
 import inet.node.ethernet.Eth10M;
 import inet.node.inet.StandardHost;
 
-network ThreeBaysOverProvisioned extends TsnNetworkBase2
+network EthernetNetwork extends TsnNetworkBase2
 {
     @display("bgb=1200,800");
     submodules:
@@ -129,7 +129,7 @@ network ThreeBaysOverProvisioned extends TsnNetworkBase2
         internet_host_4.ethg++ <--> Eth100M <--> switch_3.ethg++;
 }
 
-network ThreeBaysUnderProvisioned extends TsnNetworkBase2
+network EthernetUnderProvisioned extends TsnNetworkBase2
 {
     @display("bgb=1200,800");
     submodules:

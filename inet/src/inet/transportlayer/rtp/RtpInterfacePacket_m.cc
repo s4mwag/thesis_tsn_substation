@@ -608,7 +608,7 @@ unsigned int RtpControlInfoDescriptor::getFieldTypeFlags(int field) const
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        0,    // FIELD_type
+        FD_ISEDITABLE,    // FIELD_type
     };
     return (field >= 0 && field < 1) ? fieldTypeFlags[field] : 0;
 }
@@ -753,6 +753,7 @@ void RtpControlInfoDescriptor::setFieldValueAsString(omnetpp::any_ptr object, in
     }
     RtpControlInfo *pp = omnetpp::fromAnyPtr<RtpControlInfo>(object); (void)pp;
     switch (field) {
+        case FIELD_type: pp->setType((inet::rtp::RtpIfpType)string2enum(value, "inet::rtp::RtpIfpType")); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'RtpControlInfo'", field);
     }
 }
@@ -784,6 +785,7 @@ void RtpControlInfoDescriptor::setFieldValue(omnetpp::any_ptr object, int field,
     }
     RtpControlInfo *pp = omnetpp::fromAnyPtr<RtpControlInfo>(object); (void)pp;
     switch (field) {
+        case FIELD_type: pp->setType(static_cast<inet::rtp::RtpIfpType>(value.intValue())); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'RtpControlInfo'", field);
     }
 }

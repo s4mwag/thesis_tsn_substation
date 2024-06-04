@@ -1898,7 +1898,7 @@ unsigned int Ipv4OptionTimestampDescriptor::getFieldTypeFlags(int field) const
         field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        0,    // FIELD_flag
+        FD_ISEDITABLE,    // FIELD_flag
         FD_ISEDITABLE,    // FIELD_overflow
         FD_ISEDITABLE,    // FIELD_nextIdx
         FD_ISARRAY | FD_ISRESIZABLE,    // FIELD_recordAddress
@@ -2067,6 +2067,7 @@ void Ipv4OptionTimestampDescriptor::setFieldValueAsString(omnetpp::any_ptr objec
     }
     Ipv4OptionTimestamp *pp = omnetpp::fromAnyPtr<Ipv4OptionTimestamp>(object); (void)pp;
     switch (field) {
+        case FIELD_flag: pp->setFlag((inet::TimestampFlag)string2enum(value, "inet::TimestampFlag")); break;
         case FIELD_overflow: pp->setOverflow(string2long(value)); break;
         case FIELD_nextIdx: pp->setNextIdx(string2long(value)); break;
         case FIELD_recordTimestamp: pp->setRecordTimestamp(i,string2simtime(value)); break;
@@ -2105,6 +2106,7 @@ void Ipv4OptionTimestampDescriptor::setFieldValue(omnetpp::any_ptr object, int f
     }
     Ipv4OptionTimestamp *pp = omnetpp::fromAnyPtr<Ipv4OptionTimestamp>(object); (void)pp;
     switch (field) {
+        case FIELD_flag: pp->setFlag(static_cast<inet::TimestampFlag>(value.intValue())); break;
         case FIELD_overflow: pp->setOverflow(omnetpp::checked_int_cast<short>(value.intValue())); break;
         case FIELD_nextIdx: pp->setNextIdx(omnetpp::checked_int_cast<short>(value.intValue())); break;
         case FIELD_recordTimestamp: pp->setRecordTimestamp(i,value.doubleValue()); break;
@@ -3662,9 +3664,9 @@ unsigned int Ipv4HeaderDescriptor::getFieldTypeFlags(int field) const
         FD_ISEDITABLE,    // FIELD_dontFragment
         FD_ISEDITABLE,    // FIELD_fragmentOffset
         FD_ISEDITABLE,    // FIELD_timeToLive
-        FD_ISEDITABLE,    // FIELD_protocolId
+        0,    // FIELD_protocolId
         FD_ISEDITABLE,    // FIELD_crc
-        FD_ISEDITABLE,    // FIELD_crcMode
+        0,    // FIELD_crcMode
         0,    // FIELD_srcAddress
         0,    // FIELD_destAddress
         FD_ISCOMPOUND | FD_ISCOBJECT,    // FIELD_options
@@ -3889,9 +3891,7 @@ void Ipv4HeaderDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int fi
         case FIELD_dontFragment: pp->setDontFragment(string2bool(value)); break;
         case FIELD_fragmentOffset: pp->setFragmentOffset(string2ulong(value)); break;
         case FIELD_timeToLive: pp->setTimeToLive(string2long(value)); break;
-        case FIELD_protocolId: pp->setProtocolId((inet::IpProtocolId)string2enum(value, "inet::IpProtocolId")); break;
         case FIELD_crc: pp->setCrc(string2ulong(value)); break;
-        case FIELD_crcMode: pp->setCrcMode((inet::CrcMode)string2enum(value, "inet::CrcMode")); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'Ipv4Header'", field);
     }
 }
@@ -3948,9 +3948,7 @@ void Ipv4HeaderDescriptor::setFieldValue(omnetpp::any_ptr object, int field, int
         case FIELD_dontFragment: pp->setDontFragment(value.boolValue()); break;
         case FIELD_fragmentOffset: pp->setFragmentOffset(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
         case FIELD_timeToLive: pp->setTimeToLive(omnetpp::checked_int_cast<short>(value.intValue())); break;
-        case FIELD_protocolId: pp->setProtocolId(static_cast<inet::IpProtocolId>(value.intValue())); break;
         case FIELD_crc: pp->setCrc(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
-        case FIELD_crcMode: pp->setCrcMode(static_cast<inet::CrcMode>(value.intValue())); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'Ipv4Header'", field);
     }
 }

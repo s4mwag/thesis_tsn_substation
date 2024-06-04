@@ -421,7 +421,7 @@ unsigned int AddressBlockDescriptor::getFieldTypeFlags(int field) const
         FD_ISEDITABLE,    // FIELD_hasMetric
         FD_ISEDITABLE,    // FIELD_metric
         FD_ISEDITABLE,    // FIELD_hasMetricType
-        0,    // FIELD_metricType
+        FD_ISEDITABLE,    // FIELD_metricType
         FD_ISEDITABLE,    // FIELD_hasSequenceNumber
         0,    // FIELD_sequenceNumber
     };
@@ -610,6 +610,7 @@ void AddressBlockDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int 
         case FIELD_hasMetric: pp->setHasMetric(string2bool(value)); break;
         case FIELD_metric: pp->setMetric(string2double(value)); break;
         case FIELD_hasMetricType: pp->setHasMetricType(string2bool(value)); break;
+        case FIELD_metricType: pp->setMetricType((inet::dymo::DymoMetricType)string2enum(value, "inet::dymo::DymoMetricType")); break;
         case FIELD_hasSequenceNumber: pp->setHasSequenceNumber(string2bool(value)); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'AddressBlock'", field);
     }
@@ -657,6 +658,7 @@ void AddressBlockDescriptor::setFieldValue(omnetpp::any_ptr object, int field, i
         case FIELD_hasMetric: pp->setHasMetric(value.boolValue()); break;
         case FIELD_metric: pp->setMetric(value.doubleValue()); break;
         case FIELD_hasMetricType: pp->setHasMetricType(value.boolValue()); break;
+        case FIELD_metricType: pp->setMetricType(static_cast<inet::dymo::DymoMetricType>(value.intValue())); break;
         case FIELD_hasSequenceNumber: pp->setHasSequenceNumber(value.boolValue()); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'AddressBlock'", field);
     }
